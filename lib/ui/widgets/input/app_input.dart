@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:ionicons/ionicons.dart';
@@ -12,6 +13,7 @@ class AppInput extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final List<TextInputFormatter>? formatter;
 
   const AppInput({
     super.key,
@@ -23,6 +25,7 @@ class AppInput extends StatefulWidget {
     required this.controller,
     this.validator,
     this.onChanged,
+    this.formatter,
   });
 
   @override
@@ -63,9 +66,10 @@ class _AppInputState extends State<AppInput> {
           validator: widget.validator,
           onChanged: widget.onChanged,
           keyboardType: widget.inputType,
+          inputFormatters: widget.formatter,
           decoration: InputDecoration(
             contentPadding:
-                const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
+                const EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
             // Handle toggle suffix icon
             suffixIcon: widget.suffixIcon ??
                 (widget.isObscure

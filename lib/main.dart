@@ -7,6 +7,7 @@ import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/configs/theme_config.dart';
 import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
 import 'package:hufniture/ui/screens/splash_screen/splash_screen.dart';
 
 void main() {
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       // Config for theme
       theme: CustomTheme.lightTheme,
       //Startup screen
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

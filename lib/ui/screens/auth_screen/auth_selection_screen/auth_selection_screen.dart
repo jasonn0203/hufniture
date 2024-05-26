@@ -3,6 +3,7 @@ import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -44,7 +45,7 @@ class AuthSelectionScreen extends StatelessWidget {
                     context,
                     PageTransition(
                       type: PageTransitionType.fade,
-                      child: const LoginScreen(),
+                      child: LoginScreen(),
                     ),
                   );
                 },
@@ -57,7 +58,15 @@ class AuthSelectionScreen extends StatelessWidget {
                 height: 60,
                 isPrimary: false,
                 text: 'Đăng ký',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.fade,
+                      child: SignupScreen(),
+                    ),
+                  );
+                },
               )
             ],
           ),
