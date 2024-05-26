@@ -1,9 +1,12 @@
+// ignore_for_file: unused_import
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/configs/theme_config.dart';
-import 'package:hufniture/ui/screens/auth_selection_screen/auth_selection_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/splash_screen/splash_screen.dart';
 
 void main() {
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
       // Config for theme
       theme: CustomTheme.lightTheme,
       //Startup screen
-      home: const AuthSelectionScreen(),
+      home: const LoginScreen(),
     );
   }
 }

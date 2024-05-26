@@ -6,6 +6,7 @@ class AppButton extends StatelessWidget {
   final bool isPrimary;
   final VoidCallback onPressed;
   final double height;
+  final double width;
 
   const AppButton({
     super.key,
@@ -13,17 +14,16 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.isPrimary = true,
     this.height = 50,
+    this.width = double.infinity,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: width,
       height: height,
       child: ElevatedButton(
-        onPressed: () {
-          onPressed;
-        },
+        onPressed: onPressed,
         style: ButtonStyle(
             backgroundColor: isPrimary
                 ? MaterialStateProperty.all(ColorConfig.primaryColor)

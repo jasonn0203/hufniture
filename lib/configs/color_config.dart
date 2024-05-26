@@ -10,4 +10,8 @@ class ColorConfig {
   static const Color descTextColor = Color(0xff4B4544);
 
   static const Color accentColor = Color(0xffDCBEB6);
+
+  static const Color appbarColor = Color(0xffF4B5A4);
+
+  static const Color darkIconColor = Color(0xff4B4544);
 }

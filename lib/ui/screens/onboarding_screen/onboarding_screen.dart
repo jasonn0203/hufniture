@@ -6,7 +6,7 @@ import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/data/helpers/onboarding_model.dart';
-import 'package:hufniture/ui/screens/auth_selection_screen/auth_selection_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 class OnboardingScreen extends StatelessWidget {
