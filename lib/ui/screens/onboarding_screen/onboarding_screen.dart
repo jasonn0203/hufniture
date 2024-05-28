@@ -5,9 +5,9 @@ import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
+import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/data/helpers/onboarding_model.dart';
 import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
-import 'package:page_transition/page_transition.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -29,13 +29,7 @@ class OnboardingScreen extends StatelessWidget {
         finishButtonText: 'Tiếp tục',
         onFinish: () {
           //Direct to login/sign up
-          Navigator.push(
-            context,
-            PageTransition(
-              type: PageTransitionType.fade,
-              child: const AuthSelectionScreen(),
-            ),
-          );
+          RouteConfig.navigateTo(context, const AuthSelectionScreen());
         },
         finishButtonStyle: const FinishButtonStyle(
           backgroundColor: ColorConfig.primaryColor,

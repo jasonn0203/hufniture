@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
+import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/ui/screens/auth_screen/forgot_password_screen/forgot_password_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/input/app_input.dart';
@@ -60,9 +63,15 @@ class LoginScreen extends StatelessWidget {
           onPressed: () {
             // Handle forgot password
           },
-          child: Text(
-            'Quên mật khẩu ?',
-            style: Theme.of(context).textTheme.titleSmall,
+          child: InkWell(
+            onTap: () {
+              // Handle route to forgor pw screen
+              RouteConfig.navigateTo(context, ForgotPasswordScreen());
+            },
+            child: Text(
+              'Quên mật khẩu ?',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
           ),
         ),
         SizedBox(
@@ -84,6 +93,7 @@ class LoginScreen extends StatelessWidget {
                   TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
               onPressed: () {
                 // Handle route to sign up
+                RouteConfig.navigateTo(context, SignupScreen());
               },
               child: Text(
                 'Tạo ngay',

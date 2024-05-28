@@ -8,6 +8,7 @@ class AppInput extends StatefulWidget {
   final String label;
   final String hintText;
   final TextInputType inputType;
+  final Color fillColor;
   final bool isObscure;
   final Widget? suffixIcon;
   final TextEditingController controller;
@@ -26,6 +27,7 @@ class AppInput extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.formatter,
+    this.fillColor = ColorConfig.secondaryColor,
   });
 
   @override
@@ -58,6 +60,10 @@ class _AppInputState extends State<AppInput> {
         ),
         // Field
         TextFormField(
+          //Tap outside to dismiss focus
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           controller: widget.controller,
           cursorColor: Colors.black,
           style: const TextStyle(color: ColorConfig.mainTextColor),
@@ -91,7 +97,7 @@ class _AppInputState extends State<AppInput> {
                 .titleSmall
                 ?.copyWith(color: ColorConfig.accentColor),
             filled: true,
-            fillColor: ColorConfig.secondaryColor,
+            fillColor: widget.fillColor,
             focusedBorder: OutlineInputBorder(
               borderSide:
                   const BorderSide(color: ColorConfig.primaryColor, width: 1),

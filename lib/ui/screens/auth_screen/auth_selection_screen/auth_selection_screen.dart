@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
+import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
-import 'package:page_transition/page_transition.dart';
 
 class AuthSelectionScreen extends StatelessWidget {
   const AuthSelectionScreen({super.key});
@@ -41,13 +41,7 @@ class AuthSelectionScreen extends StatelessWidget {
                 isPrimary: true,
                 text: 'Đăng nhập',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      child: LoginScreen(),
-                    ),
-                  );
+                  RouteConfig.navigateTo(context, LoginScreen());
                 },
                 height: 60,
               ),
@@ -59,13 +53,7 @@ class AuthSelectionScreen extends StatelessWidget {
                 isPrimary: false,
                 text: 'Đăng ký',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      child: SignupScreen(),
-                    ),
-                  );
+                  RouteConfig.navigateTo(context, SignupScreen());
                 },
               )
             ],
