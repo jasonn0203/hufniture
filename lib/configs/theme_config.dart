@@ -26,19 +26,26 @@ class CustomTheme {
   static const TextTheme _bodyTextTheme = TextTheme(
     bodySmall: TextStyle(
       color: ColorConfig.descTextColor,
-      fontFamily: 'LeagueSpartan',
+      fontFamily: 'Roboto',
       fontSize: 14,
-      fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.w400,
     ),
     bodyMedium: TextStyle(
       color: ColorConfig.mainTextColor,
-      fontFamily: 'LeagueSpartan',
+      fontFamily: 'Roboto',
       fontSize: 16,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.normal,
+    ),
+    bodyLarge: TextStyle(
+      color: ColorConfig.mainTextColor,
+      fontFamily: 'Roboto',
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
     ),
   );
 
   static ThemeData lightTheme = ThemeData(
+    visualDensity: VisualDensity.adaptivePlatformDensity,
     useMaterial3: true,
     primaryColor: ColorConfig.primaryColor,
     textTheme: _titleTextTheme.merge(_bodyTextTheme),

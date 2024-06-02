@@ -19,7 +19,9 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppbar(title: 'Login'),
+      appBar: const CustomAppbar(
+        title: 'Login',
+      ),
       body: Padding(
         padding: ConstraintConfig.kHorizontalPadding,
         child: Column(

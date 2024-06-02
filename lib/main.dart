@@ -5,9 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/configs/theme_config.dart';
+import 'package:hufniture/ui/screens/app_navigation/app_navigation.dart';
 import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
+import 'package:hufniture/ui/screens/home_screen/home_screen.dart';
 import 'package:hufniture/ui/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:hufniture/ui/screens/splash_screen/splash_screen.dart';
 
@@ -35,8 +37,9 @@ class MyApp extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       // Config for theme
       theme: CustomTheme.lightTheme,
+
       //Startup screen
-      home: LoginScreen(),
+      home: const AppNavigation(),
     );
   }
 }

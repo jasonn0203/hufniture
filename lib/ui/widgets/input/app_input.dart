@@ -45,6 +45,12 @@ class _AppInputState extends State<AppInput> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    widget.controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

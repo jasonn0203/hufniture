@@ -6,6 +6,7 @@ import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
+import 'package:hufniture/ui/widgets/text/body/app_custom_text.dart';
 
 class AuthSelectionScreen extends StatelessWidget {
   const AuthSelectionScreen({super.key});
@@ -28,12 +29,11 @@ class AuthSelectionScreen extends StatelessWidget {
               SizedBox(
                 height: ConstraintConfig.kSpaceBetweenItemsLarge,
               ),
-              Text('Tiến hành đăng ký / đăng nhập để khám phá ngay Hufniture!',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.normal)),
+              AppCustomText(
+                content:
+                    'Tiến hành đăng ký / đăng nhập để khám phá ngay Hufniture!',
+                textStyle: Theme.of(context).textTheme.bodySmall,
+              ),
               SizedBox(
                 height: ConstraintConfig.kSpaceBetweenItemsLarge,
               ),

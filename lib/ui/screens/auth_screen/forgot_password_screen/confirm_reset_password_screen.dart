@@ -65,7 +65,7 @@ class ConfirmResetPasswordScreen extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: AppButton(
-                width: ConstraintConfig.getWidth(context) / 2,
+                width: ConstraintConfig.getWidth(context),
                 text: 'Đổi mật khẩu',
                 onPressed: () {
                   // Handle reset password
