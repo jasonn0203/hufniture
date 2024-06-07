@@ -28,13 +28,15 @@ class AppButton extends StatelessWidget {
             backgroundColor: isPrimary
                 ? MaterialStateProperty.all(ColorConfig.primaryColor)
                 : MaterialStateProperty.all(ColorConfig.secondaryColor)),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontSize: 20,
-              color: isPrimary
-                  ? ColorConfig.secondaryColor
-                  : ColorConfig.accentColor),
+        child: FittedBox(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontSize: 20,
+                color: isPrimary
+                    ? ColorConfig.secondaryColor
+                    : ColorConfig.accentColor),
+          ),
         ),
       ),
     );

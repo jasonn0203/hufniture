@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: const CustomAppbar(
-        title: 'Chào mừng trở lại',
+        title: 'Xin chào',
         isCenterTitle: false,
         isHomePage: true,
       ),

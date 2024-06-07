@@ -30,6 +30,7 @@ class AppCustomText extends StatelessWidget {
         color ? style?.copyWith(color: ColorConfig.primaryColor) : style;
 
     return Text(
+      textAlign: TextAlign.justify,
       content,
       // if textStyle is null then apply combineStyle
       style: textStyle ?? combineStyle,

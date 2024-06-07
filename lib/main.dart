@@ -9,8 +9,10 @@ import 'package:hufniture/ui/screens/app_navigation/app_navigation.dart';
 import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
+import 'package:hufniture/ui/screens/category/category_by_room_screen/category_by_room_screen.dart';
 import 'package:hufniture/ui/screens/home_screen/home_screen.dart';
 import 'package:hufniture/ui/screens/onboarding_screen/onboarding_screen.dart';
+import 'package:hufniture/ui/screens/product_detail/product_detail.dart';
 import 'package:hufniture/ui/screens/splash_screen/splash_screen.dart';
 
 void main() {
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
       theme: CustomTheme.lightTheme,
 
       //Startup screen
-      home: const AppNavigation(),
+      home: const ProductDetail(),
     );
   }
 }
