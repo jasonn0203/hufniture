@@ -11,6 +11,7 @@ class AppInput extends StatefulWidget {
   final Color fillColor;
   final bool isObscure;
   final Widget? suffixIcon;
+  final int? maxLines;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
@@ -30,6 +31,7 @@ class AppInput extends StatefulWidget {
     this.formatter,
     this.fillColor = ColorConfig.secondaryColor,
     this.onTap,
+    this.maxLines = 1,
   });
 
   @override
@@ -73,9 +75,9 @@ class _AppInputState extends State<AppInput> {
             FocusManager.instance.primaryFocus?.unfocus();
           },
           controller: widget.controller,
-          cursorColor: Colors.black,
+          cursorColor: ColorConfig.primaryColor,
           style: const TextStyle(color: ColorConfig.mainTextColor),
-          maxLines: 1,
+          maxLines: widget.maxLines,
           obscureText: isObscure,
           validator: widget.validator,
           onChanged: widget.onChanged,

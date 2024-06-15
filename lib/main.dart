@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         theme: CustomTheme.lightTheme,
 
         //Startup screen
-        home: const ProductDetail() //const AppNavigation()
+        home: const AppNavigation() //const ProductDetail()
         //     CategoryByRoomScreen(
         //   roomName: 'Phòng Ngủ',
         // ),

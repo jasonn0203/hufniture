@@ -25,7 +25,7 @@ List<Widget> pages = [
 ];
 
 class _AppNavigationState extends State<AppNavigation> {
-  var _currentIndex = 4;
+  var _currentIndex = 2;
 
   @override
   Widget build(BuildContext context) {

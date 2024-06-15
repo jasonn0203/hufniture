@@ -12,4 +12,9 @@ class Helpers {
     decimalSeparator: ',',
     symbolSeparator: ' ',
   );
+
+  static String formatPrice(double price) {
+    return CurrencyFormatter.format(price, Helpers.currencySettings,
+        decimal: 3);
+  }
 }
