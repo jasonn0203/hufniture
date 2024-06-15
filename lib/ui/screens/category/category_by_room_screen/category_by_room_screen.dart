@@ -1,6 +1,7 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
+import 'package:hufniture/configs/constraint_config.dart';
 
 import 'package:hufniture/data/helpers/product_card_model.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
@@ -19,23 +20,12 @@ class CategoryByRoomScreen extends StatelessWidget {
   ];
 
   final ProductCardModel productCardModel = ProductCardModel(
+      id: 1,
       prodImgUrl:
           'https://www.pngall.com/wp-content/uploads/2016/06/Furniture-PNG-HD.png',
       prodName: 'Ghế Sofa',
       shorDesc: 'Ghế được làm bằng nhung, tạo cảm giác thoải mái',
       prodPrice: 150000);
-
-  // Reponsive config
-  int _getCrossAxisCount(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth >= 1200) {
-      return 6; // Large screens
-    } else if (screenWidth >= 800) {
-      return 4; // Tablets
-    } else {
-      return 2; // Mobile devices
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +70,7 @@ class CategoryByRoomScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: _getCrossAxisCount(context),
+              crossAxisCount: ConstraintConfig.responsive(context, 6, 4, 2),
               crossAxisSpacing: 12,
               mainAxisSpacing: 8,
               mainAxisExtent: 290,

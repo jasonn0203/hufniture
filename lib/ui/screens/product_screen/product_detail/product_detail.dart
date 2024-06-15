@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
+import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/configs/toast_manager.dart';
+import 'package:hufniture/ui/screens/product_screen/product_review/product_review.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
@@ -85,10 +87,17 @@ class _ProductDetailState extends State<ProductDetail> {
                             setState(() {
                               _isFavorite = !_isFavorite;
                               // Add successful toast
-                              ToastManager.showSuccessToast(
-                                  context,
-                                  'Thành công !',
-                                  'Thêm vào yêu thích thành công');
+                              if (_isFavorite == true) {
+                                ToastManager.showSuccessToast(
+                                    context,
+                                    'Thêm thành công !',
+                                    'Thêm vào wishlist thành công !');
+                              } else {
+                                ToastManager.showSuccessToast(
+                                    context,
+                                    'Xóa thành công !',
+                                    'Đã xóa ra khỏi wishlist !');
+                              }
                             });
                           },
                           icon: _isFavorite
@@ -99,7 +108,12 @@ class _ProductDetailState extends State<ProductDetail> {
                               : const Icon(Ionicons.heart_outline))
                     ],
                   ),
-                  SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
+                  SizedBox(height: ConstraintConfig.kSpaceBetweenItemsSmall),
+                  InkWell(
+                    onTap: () =>
+                        RouteConfig.navigateTo(context, const ProductReview()),
+                    child: const Text('Xem đánh giá'),
+                  )
                 ],
               ),
             ),
@@ -112,7 +126,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 text: 'Thêm vào giỏ',
                 onPressed: () {
                   ToastManager.showSuccessToast(
-                      context, 'Thành công !', 'Thêm vào giỏ hàng thành công');
+                      context, 'Thêm thành công !', 'Đã thêm vào giỏ hàng !');
                 },
                 width: ConstraintConfig.getWidth(context) / 2,
               ),

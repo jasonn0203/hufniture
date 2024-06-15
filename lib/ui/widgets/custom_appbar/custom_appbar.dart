@@ -29,6 +29,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       //     Navigator.of(context).pop();
       //   },
       // ),
+      surfaceTintColor: ColorConfig.primaryColor,
       automaticallyImplyLeading: true,
       centerTitle: isCenterTitle,
       actions: [

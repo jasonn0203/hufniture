@@ -12,7 +12,7 @@ import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dar
 import 'package:hufniture/ui/screens/category/category_by_room_screen/category_by_room_screen.dart';
 import 'package:hufniture/ui/screens/home_screen/home_screen.dart';
 import 'package:hufniture/ui/screens/onboarding_screen/onboarding_screen.dart';
-import 'package:hufniture/ui/screens/product_detail/product_detail.dart';
+import 'package:hufniture/ui/screens/product_screen/product_detail/product_detail.dart';
 import 'package:hufniture/ui/screens/splash_screen/splash_screen.dart';
 
 void main() {
@@ -32,16 +32,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: Helpers.appName,
-      //Config for device preview
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      // Config for theme
-      theme: CustomTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
+        title: Helpers.appName,
+        //Config for device preview
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
+        // Config for theme
+        theme: CustomTheme.lightTheme,
 
-      //Startup screen
-      home: const ProductDetail(),
-    );
+        //Startup screen
+        home: const ProductDetail() //const AppNavigation()
+        //     CategoryByRoomScreen(
+        //   roomName: 'Phòng Ngủ',
+        // ),
+        );
   }
 }

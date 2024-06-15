@@ -6,7 +6,7 @@ import 'package:ionicons/ionicons.dart';
 
 class AppInput extends StatefulWidget {
   final String label;
-  final String hintText;
+  final String? hintText;
   final TextInputType inputType;
   final Color fillColor;
   final bool isObscure;
@@ -14,12 +14,13 @@ class AppInput extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final void Function()? onTap;
   final List<TextInputFormatter>? formatter;
 
   const AppInput({
     super.key,
     required this.label,
-    required this.hintText,
+    this.hintText,
     this.inputType = TextInputType.text,
     this.isObscure = false,
     this.suffixIcon,
@@ -28,6 +29,7 @@ class AppInput extends StatefulWidget {
     this.onChanged,
     this.formatter,
     this.fillColor = ColorConfig.secondaryColor,
+    this.onTap,
   });
 
   @override
@@ -79,6 +81,7 @@ class _AppInputState extends State<AppInput> {
           onChanged: widget.onChanged,
           keyboardType: widget.inputType,
           inputFormatters: widget.formatter,
+          onTap: widget.onTap,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),

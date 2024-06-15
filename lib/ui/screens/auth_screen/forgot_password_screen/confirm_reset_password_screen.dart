@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/route_config.dart';
-import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/input/app_input.dart';
@@ -70,7 +70,7 @@ class ConfirmResetPasswordScreen extends StatelessWidget {
                 onPressed: () {
                   // Handle reset password
 
-                  RouteConfig.navigateTo(context, const AuthSelectionScreen());
+                  RouteConfig.navigateTo(context, LoginScreen());
                 },
               ),
             ),

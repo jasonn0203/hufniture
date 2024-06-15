@@ -9,7 +9,7 @@ class ToastManager {
       animationCurve: Curves.linearToEaseOut,
       toastDuration: const Duration(seconds: 1),
       position: MotionToastPosition.top,
-      animationType: AnimationType.fromLeft,
+      animationType: AnimationType.fromTop,
       title: Text(
         title,
         style: const TextStyle(color: Colors.white),

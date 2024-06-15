@@ -25,7 +25,7 @@ List<Widget> pages = [
 ];
 
 class _AppNavigationState extends State<AppNavigation> {
-  var _currentIndex = 1;
+  var _currentIndex = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,8 @@ class _AppNavigationState extends State<AppNavigation> {
 
           /// Profile
           SalomonBottomBarItem(
-            icon: const Icon(Ionicons.person),
+            icon: const Icon(Ionicons.person_outline),
+            activeIcon: const Icon(Ionicons.person),
             title: const Text("Cá Nhân"),
           ),
         ],
