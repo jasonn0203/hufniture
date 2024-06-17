@@ -10,7 +10,7 @@ import 'package:hufniture/ui/screens/product_screen/product_review/product_revie
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
-import 'package:hufniture/ui/widgets/text/body/app_custom_text.dart';
+import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 import 'package:ionicons/ionicons.dart';
 
 class ProductDetail extends StatefulWidget {

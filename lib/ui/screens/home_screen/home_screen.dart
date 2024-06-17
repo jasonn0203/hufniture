@@ -9,7 +9,7 @@ import 'package:hufniture/data/helpers/banner_model.dart';
 import 'package:hufniture/data/services/BannerService/banner_service.dart';
 import 'package:hufniture/ui/widgets/category/category_home/category_home.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
-import 'package:hufniture/ui/widgets/text/body/app_custom_text.dart';
+import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

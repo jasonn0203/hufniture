@@ -6,7 +6,7 @@ import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
-import 'package:hufniture/ui/widgets/text/body/app_custom_text.dart';
+import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 
 class AuthSelectionScreen extends StatelessWidget {
   const AuthSelectionScreen({super.key});
