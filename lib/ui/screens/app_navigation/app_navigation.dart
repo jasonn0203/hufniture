@@ -33,7 +33,7 @@ class _AppNavigationState extends State<AppNavigation> {
       body: pages[_currentIndex],
       bottomNavigationBar: SalomonBottomBar(
         itemPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-        unselectedItemColor: ColorConfig.accentColor,
+        unselectedItemColor: ColorConfig.darkIconColor,
         selectedItemColor: ColorConfig.primaryColor,
         currentIndex: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),

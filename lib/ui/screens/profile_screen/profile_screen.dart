@@ -209,12 +209,12 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Icon(
                   Ionicons.person,
-                  color: ColorConfig.accentColor,
+                  color: ColorConfig.secondaryColor,
                   size: 30,
                 ),
                 Text(
                   'Cá Nhân',
-                  style: TextStyle(color: ColorConfig.accentColor),
+                  style: TextStyle(color: ColorConfig.secondaryColor),
                 )
               ],
             ),
@@ -228,12 +228,12 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Icon(
                 Ionicons.reader,
-                color: ColorConfig.accentColor,
+                color: ColorConfig.secondaryColor,
                 size: 30,
               ),
               Text(
                 'Đơn Hàng',
-                style: TextStyle(color: ColorConfig.accentColor),
+                style: TextStyle(color: ColorConfig.secondaryColor),
               )
             ],
           )

@@ -139,8 +139,8 @@ class _CartScreenState extends State<CartScreen> {
                 AppCustomText(
                   content: 'Tạm Tổng',
                   textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: ColorConfig.mainTextColor,
-                      fontWeight: FontWeight.bold),
+                      color: ColorConfig.accentColor,
+                      fontWeight: FontWeight.normal),
                 ),
                 AppCustomText(content: Helpers.formatPrice(totalPrice)),
               ],
@@ -154,8 +154,8 @@ class _CartScreenState extends State<CartScreen> {
                 AppCustomText(
                   content: 'Phí Giao Hàng',
                   textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: ColorConfig.mainTextColor,
-                      fontWeight: FontWeight.bold),
+                      color: ColorConfig.accentColor,
+                      fontWeight: FontWeight.normal),
                 ),
                 AppCustomText(content: Helpers.formatPrice(shippingFee)),
               ],
@@ -176,7 +176,7 @@ class _CartScreenState extends State<CartScreen> {
                 AppCustomText(
                   content: 'Tổng Cộng',
                   textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: ColorConfig.mainTextColor,
+                        color: ColorConfig.accentColor,
                       ),
                 ),
                 AppCustomText(
@@ -276,7 +276,7 @@ class _CartScreenState extends State<CartScreen> {
                 alignment: Alignment.center,
                 icon: const Icon(
                   Ionicons.add,
-                  color: ColorConfig.accentColor,
+                  color: ColorConfig.secondaryColor,
                   size: 10,
                 ),
                 onPressed: () {

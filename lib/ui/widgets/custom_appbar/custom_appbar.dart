@@ -43,7 +43,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               child: IconButton(
                 icon: const Icon(
                   Ionicons.search,
-                  color: ColorConfig.accentColor,
+                  color: ColorConfig.secondaryColor,
                 ),
                 onPressed: () {},
               ),
@@ -57,7 +57,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
           style: Theme.of(context)
               .textTheme
               .titleMedium
-              ?.copyWith(color: ColorConfig.appbarColor),
+              ?.copyWith(color: ColorConfig.accentColor),
         ),
       ),
     );

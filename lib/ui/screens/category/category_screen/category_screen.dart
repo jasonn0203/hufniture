@@ -10,9 +10,9 @@ class CategoryScreen extends StatelessWidget {
     "Phòng Ngủ",
     "Phòng Bếp",
     "Phòng Tắm",
+    "Phòng Làm Việc",
     "Phòng Khách",
     "Phòng Thờ",
-    "Phòng Làm Việc",
     "Phòng Ăn",
   ];
   @override

@@ -28,7 +28,7 @@ class CategoryGrid extends StatelessWidget {
             },
             child: Container(
               decoration: const BoxDecoration(
-                color: ColorConfig.appbarColor,
+                color: ColorConfig.accentColor,
                 borderRadius: BorderRadius.all(Radius.circular(15.0)),
               ),
               height: index % 2 == 0

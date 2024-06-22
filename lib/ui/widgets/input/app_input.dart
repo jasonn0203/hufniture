@@ -106,7 +106,7 @@ class _AppInputState extends State<AppInput> {
             hintStyle: Theme.of(context)
                 .textTheme
                 .titleSmall
-                ?.copyWith(color: ColorConfig.accentColor),
+                ?.copyWith(color: ColorConfig.mainTextColor),
             filled: true,
             fillColor: widget.fillColor,
             focusedBorder: OutlineInputBorder(
