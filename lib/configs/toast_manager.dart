@@ -8,8 +8,8 @@ class ToastManager {
       borderRadius: 12,
       animationCurve: Curves.linearToEaseOut,
       toastDuration: const Duration(seconds: 1),
-      position: MotionToastPosition.top,
-      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.bottom,
+      animationType: AnimationType.fromBottom,
       title: Text(
         title,
         style: const TextStyle(color: Colors.white),

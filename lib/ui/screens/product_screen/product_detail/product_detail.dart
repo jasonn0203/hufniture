@@ -7,6 +7,7 @@ import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/configs/toast_manager.dart';
 import 'package:hufniture/ui/screens/product_screen/product_review/product_review.dart';
+import 'package:hufniture/ui/screens/wishlist_screen/wishlist_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
@@ -81,31 +82,45 @@ class _ProductDetailState extends State<ProductDetail> {
                         isTitle: true,
                         content: _formatPrice(250000),
                       ),
-                      IconButton(
-                          tooltip: 'Thêm vào yêu thích',
-                          onPressed: () {
-                            setState(() {
-                              _isFavorite = !_isFavorite;
-                              // Add successful toast
-                              if (_isFavorite == true) {
-                                ToastManager.showSuccessToast(
-                                    context,
-                                    'Thêm thành công !',
-                                    'Thêm vào wishlist thành công !');
-                              } else {
-                                ToastManager.showSuccessToast(
-                                    context,
-                                    'Xóa thành công !',
-                                    'Đã xóa ra khỏi wishlist !');
-                              }
-                            });
-                          },
-                          icon: _isFavorite
-                              ? const Icon(
-                                  Ionicons.heart,
-                                  color: ColorConfig.primaryColor,
-                                )
-                              : const Icon(Ionicons.heart_outline))
+                      Hero(
+                        tag: 'favorite-icon',
+                        child: IconButton(
+                            tooltip: 'Thêm vào yêu thích',
+                            onPressed: () {
+                              setState(() {
+                                _isFavorite = !_isFavorite;
+                                // Add successful toast
+                                if (_isFavorite == true) {
+                                  ToastManager.showSuccessToast(
+                                      context,
+                                      'Thêm thành công !',
+                                      'Thêm vào wishlist thành công !');
+                                } else {
+                                  ToastManager.showSuccessToast(
+                                      context,
+                                      'Xóa thành công !',
+                                      'Đã xóa ra khỏi wishlist !');
+                                }
+                                // Heart icon animation
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    transitionDuration: const Duration(
+                                        milliseconds:
+                                            1250), // Animation Duration
+                                    pageBuilder: (_, __, ___) =>
+                                        const WishlistScreen(),
+                                  ),
+                                );
+                              });
+                            },
+                            icon: _isFavorite
+                                ? const Icon(
+                                    Ionicons.heart,
+                                    color: ColorConfig.primaryColor,
+                                  )
+                                : const Icon(Ionicons.heart_outline)),
+                      )
                     ],
                   ),
                   SizedBox(height: ConstraintConfig.kSpaceBetweenItemsSmall),
