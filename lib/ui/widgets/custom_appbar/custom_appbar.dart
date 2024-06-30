@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
+import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/ui/screens/search_screen/search_screen.dart';
 import 'package:ionicons/ionicons.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -45,7 +47,9 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                   Ionicons.search,
                   color: ColorConfig.secondaryColor,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  RouteConfig.navigateTo(context, const SearchScreen());
+                },
               ),
             ),
           )

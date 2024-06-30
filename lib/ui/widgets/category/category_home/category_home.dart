@@ -19,7 +19,7 @@ class CategoryHome extends StatelessWidget {
           width: 60,
           child: const Icon(
             Ionicons.bed,
-            color: ColorConfig.accentColor,
+            color: Colors.white,
           ),
         ),
       ),
