@@ -182,14 +182,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
-  flutter_dash:
-    dependency: "direct main"
-    description:
-      name: flutter_dash
-      sha256: dc282109cc12806853e102a4e8b9d99abb7f527fcedec2ea03860e2500ee6622
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -262,7 +254,7 @@ packages:
     source: hosted
     version: "4.0.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
@@ -349,6 +341,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  order_tracker_zen:
+    dependency: "direct main"
+    description:
+      name: order_tracker_zen
+      sha256: a91ce3aa32cd2f2a0879d11ad67d97798cb253e856627801fc36189d5b7e6909
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+4"
   page_transition:
     dependency: "direct main"
     description:

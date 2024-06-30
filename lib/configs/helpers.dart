@@ -1,4 +1,5 @@
 import 'package:currency_formatter/currency_formatter.dart';
+import 'package:intl/intl.dart';
 
 class Helpers {
   static String assetUrl = 'assets';
@@ -16,5 +17,11 @@ class Helpers {
   static String formatPrice(double price) {
     return CurrencyFormatter.format(price, Helpers.currencySettings,
         decimal: 3);
+  }
+
+  static String formatOrderDate() {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat("E, d MMM  - HH:mm").format(now);
+    return formattedDate;
   }
 }

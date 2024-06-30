@@ -9,8 +9,8 @@ import 'package:ionicons/ionicons.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class AppNavigation extends StatefulWidget {
-  const AppNavigation({super.key});
-
+  const AppNavigation({super.key, required this.index});
+  final int index;
   @override
   State<AppNavigation> createState() => _AppNavigationState();
 }
@@ -25,7 +25,7 @@ List<Widget> pages = [
 ];
 
 class _AppNavigationState extends State<AppNavigation> {
-  var _currentIndex = 2;
+  var _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {

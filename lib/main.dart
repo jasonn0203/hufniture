@@ -12,6 +12,7 @@ import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dar
 import 'package:hufniture/ui/screens/category/category_by_room_screen/category_by_room_screen.dart';
 import 'package:hufniture/ui/screens/home_screen/home_screen.dart';
 import 'package:hufniture/ui/screens/onboarding_screen/onboarding_screen.dart';
+import 'package:hufniture/ui/screens/order_screen/track_order_screen/track_order_screen.dart';
 import 'package:hufniture/ui/screens/payment_screen/payment_fail_screen/payment_fail_screen.dart';
 import 'package:hufniture/ui/screens/payment_screen/payment_successful_screen/payment_successful_screen.dart';
 import 'package:hufniture/ui/screens/product_screen/product_detail/product_detail.dart';
@@ -43,7 +44,9 @@ class MyApp extends StatelessWidget {
         theme: CustomTheme.lightTheme,
 
         //Startup screen
-        home: const AppNavigation() //const ProductDetail()
+        home: const TrackOrderScreen(
+          orderStatus: 'shipping',
+        ) //const AppNavigation() //const ProductDetail()
         //     CategoryByRoomScreen(
         //   roomName: 'Phòng Ngủ',
         // ),
