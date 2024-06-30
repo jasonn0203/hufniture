@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
+import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/ui/screens/payment_screen/payment_address_screen/payment_address_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
@@ -38,9 +40,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         .titleSmall
                         ?.copyWith(fontWeight: FontWeight.w600),
                   ),
-                  const Icon(
-                    Ionicons.create_outline,
-                    color: ColorConfig.primaryColor,
+                  GestureDetector(
+                    onTap: () {
+                      RouteConfig.navigateTo(
+                          context, const PaymentAddressScreen());
+                    },
+                    child: const Icon(
+                      Ionicons.create_outline,
+                      color: ColorConfig.primaryColor,
+                    ),
                   )
                 ],
               ),
