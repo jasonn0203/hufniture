@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/ui/screens/order_screen/order_list_screen/order_list_screen.dart';
 import 'package:hufniture/ui/screens/profile_screen/profile_information/profile_information.dart';
 import 'package:hufniture/ui/screens/profile_screen/profile_setting/profile_setting.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
@@ -224,18 +225,23 @@ class ProfileScreen extends StatelessWidget {
             height: 50,
             color: ColorConfig.secondaryColor,
           ),
-          const Column(
-            children: [
-              Icon(
-                Ionicons.reader,
-                color: ColorConfig.secondaryColor,
-                size: 30,
-              ),
-              Text(
-                'Đơn Hàng',
-                style: TextStyle(color: ColorConfig.secondaryColor),
-              )
-            ],
+          GestureDetector(
+            onTap: () {
+              RouteConfig.navigateTo(context, OrderListScreen());
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Ionicons.reader,
+                  color: ColorConfig.secondaryColor,
+                  size: 30,
+                ),
+                Text(
+                  'Đơn Hàng',
+                  style: TextStyle(color: ColorConfig.secondaryColor),
+                )
+              ],
+            ),
           )
         ],
       ),

@@ -168,7 +168,7 @@ class _SearchScreenState extends State<SearchScreen> {
               AppButton(
                 text: 'Lọc',
                 onPressed: () {
-                  RouteConfig.navigateTo(context, SearchResult());
+                  RouteConfig.navigateTo(context, const SearchResult());
                 },
               ),
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
