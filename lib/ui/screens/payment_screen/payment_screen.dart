@@ -221,7 +221,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ?.copyWith(fontWeight: FontWeight.w600),
         ),
         AppCustomText(
-          content: Helpers.formatPrice(widget.totalPrice),
+          content: Helpers.formatPrice(widget.totalPrice).toString(),
           isTitle: true,
         )
       ],

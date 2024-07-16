@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:hufniture/data/models/category.dart';
 
 class CategoryHome extends StatelessWidget {
-  const CategoryHome({super.key});
-
+  const CategoryHome({super.key, required this.category});
+  final FurnitureCategoryList category;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -12,14 +12,15 @@ class CategoryHome extends StatelessWidget {
       child: InkWell(
         onTap: () {},
         child: Container(
+          padding: const EdgeInsets.all(12),
           decoration: const BoxDecoration(
               color: ColorConfig.secondaryColor,
               borderRadius: BorderRadius.all(Radius.circular(12))),
           height: 60,
           width: 60,
-          child: const Icon(
-            Ionicons.bed,
-            color: Colors.white,
+          child: Image.network(
+            category.categoryIcon!,
+            fit: BoxFit.contain,
           ),
         ),
       ),

@@ -1,8 +1,11 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/configs/validators.dart';
+import 'package:hufniture/data/services/AuthService/auth_service.dart';
+import 'package:hufniture/ui/screens/app_navigation/app_navigation.dart';
 import 'package:hufniture/ui/screens/auth_screen/forgot_password_screen/forgot_password_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
@@ -15,6 +18,10 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +117,7 @@ class LoginScreen extends StatelessWidget {
 
   Form buildLoginForm(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -119,6 +127,7 @@ class LoginScreen extends StatelessWidget {
             label: 'Email',
             hintText: 'abc@gmail.com',
             inputType: TextInputType.emailAddress,
+            validator: Validators.validateEmail,
           ),
           SizedBox(
             height: ConstraintConfig.kSpaceBetweenItemsUltraLarge,
@@ -128,6 +137,7 @@ class LoginScreen extends StatelessWidget {
             label: 'Mật khẩu',
             hintText: '●●●●●●●●',
             isObscure: true,
+            validator: Validators.validatePassword,
           ),
           SizedBox(
             height: ConstraintConfig.kSpaceBetweenItemsUltraLarge * 3,
@@ -141,8 +151,38 @@ class LoginScreen extends StatelessWidget {
                 child: AppButton(
                   width: ConstraintConfig.getWidth(context) / 2,
                   text: 'Đăng nhập',
-                  onPressed: () {
+                  onPressed: () async {
                     // Handle login
+                    // Kiểm tra giá trị của form
+                    if (_formKey.currentState!.validate()) {
+                      // Gọi API đăng nhập
+                      final errorMessage = await _authService.loginUser(
+                          emailController.text, passwordController.text);
+
+                      if (errorMessage == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 2),
+                              content: Text('Đăng nhập thành công!')),
+                        );
+                        Navigator.pop(context);
+
+                        // Xử lý chuyển hướng sau khi đăng nhập thành công
+                        RouteConfig.navigateTo(
+                          context,
+                          const AppNavigation(index: 0),
+                          pushScreenType: PushScreenType.pushAndRemoveUntil,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              backgroundColor: Colors.red,
+                              duration: const Duration(seconds: 2),
+                              content: Text(errorMessage)),
+                        );
+                      }
+                    }
                   },
                 ),
               ),

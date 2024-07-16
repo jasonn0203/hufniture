@@ -3,7 +3,11 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hufniture/configs/color_config.dart';
 
 class CategoryGrid extends StatelessWidget {
-  const CategoryGrid({super.key, required this.item, required this.function});
+  const CategoryGrid({
+    super.key,
+    required this.item,
+    required this.function,
+  });
   final List<String> item;
   final Function(String) function;
 

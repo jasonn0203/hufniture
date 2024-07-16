@@ -1,27 +1,17 @@
-// ignore_for_file: unused_import
-
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/configs/theme_config.dart';
-import 'package:hufniture/ui/screens/app_navigation/app_navigation.dart';
-import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
-import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
-import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
-import 'package:hufniture/ui/screens/category/category_by_room_screen/category_by_room_screen.dart';
-import 'package:hufniture/ui/screens/home_screen/home_screen.dart';
-import 'package:hufniture/ui/screens/onboarding_screen/onboarding_screen.dart';
-import 'package:hufniture/ui/screens/order_screen/order_list_screen/order_list_screen.dart';
-import 'package:hufniture/ui/screens/order_screen/track_order_screen/track_order_screen.dart';
-import 'package:hufniture/ui/screens/payment_screen/payment_fail_screen/payment_fail_screen.dart';
-import 'package:hufniture/ui/screens/payment_screen/payment_successful_screen/payment_successful_screen.dart';
-import 'package:hufniture/ui/screens/product_screen/product_detail/product_detail.dart';
-import 'package:hufniture/ui/screens/splash_screen/splash_screen.dart';
 
-void main() {
+import 'package:hufniture/ui/screens/app_navigation/app_navigation.dart';
+import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
-    // Device Preview Lib - for simulate multiple devices on web
     DevicePreview(
       enabled: !kReleaseMode,
       builder: (context) => const MyApp(),
@@ -30,31 +20,25 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    Key? key,
+  }) : super(key: key);
 
-  // This widget is the root of your application.
+  Future<bool> checkUserLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userString = prefs.getString('user');
+    return userString != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: Helpers.appName,
-        //Config for device preview
-        locale: DevicePreview.locale(context),
-        builder: DevicePreview.appBuilder,
-        // Config for theme
-        theme: CustomTheme.lightTheme,
-
-        //Startup screen
-        home:
-            // const TrackOrderScreen(
-            //   orderStatus: 'shipping',
-            // )
-            const AppNavigation(
-          index: 0,
-        ) //const ProductDetail()
-        //     CategoryByRoomScreen(
-        //   roomName: 'Phòng Ngủ',
-        // ),
-        );
+      debugShowCheckedModeBanner: false,
+      title: Helpers.appName,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      theme: CustomTheme.lightTheme,
+      home: const AppNavigation(index: 0),
+    );
   }
 }

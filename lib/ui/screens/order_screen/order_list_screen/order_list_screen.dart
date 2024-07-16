@@ -7,7 +7,6 @@ import 'package:hufniture/ui/screens/order_screen/track_order_screen/track_order
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
-import 'package:order_tracker_zen/order_tracker_zen.dart';
 
 class OrderListScreen extends StatelessWidget {
   OrderListScreen({super.key});
@@ -83,28 +82,32 @@ class OrderListScreen extends StatelessWidget {
             context, const TrackOrderScreen(orderStatus: 'shipping'));
       },
       child: ListTile(
-        leading: CachedNetworkImage(
-          imageUrl:
-              'https://th.bing.com/th/id/OIP.8Sbwf_y-3J7qOKL93Xil9wHaFj?rs=1&pid=ImgDetMain',
-          fit: BoxFit.contain,
-          alignment: Alignment.center,
-          placeholder: (context, url) => const Center(
-            // Placeholder when load images
-            child: LoadingIndicator(),
+        leading: SizedBox(
+          width: 60,
+          height: 60,
+          child: CachedNetworkImage(
+            imageUrl:
+                'https://th.bing.com/th/id/OIP.8Sbwf_y-3J7qOKL93Xil9wHaFj?rs=1&pid=ImgDetMain',
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            placeholder: (context, url) => const Center(
+              // Placeholder when load images
+              child: LoadingIndicator(),
+            ),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error), // Widget hiển thị khi có lỗi
           ),
-          errorWidget: (context, url, error) =>
-              const Icon(Icons.error), // Widget hiển thị khi có lỗi
         ),
         title: const AppCustomText(content: 'Nội Thất'),
         subtitle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             AppCustomText(
-              content: Helpers.formatPrice(140000),
+              content: Helpers.formatPrice(140000).toString(),
             ),
             const AppCustomText(content: '1x'),
             AppCustomText(
-              content: Helpers.formatPrice(140000),
+              content: Helpers.formatPrice(140000).toString(),
               color: true,
             ),
           ],

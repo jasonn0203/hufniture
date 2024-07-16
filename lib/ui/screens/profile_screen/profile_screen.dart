@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/order_screen/order_list_screen/order_list_screen.dart';
 import 'package:hufniture/ui/screens/profile_screen/profile_information/profile_information.dart';
 import 'package:hufniture/ui/screens/profile_screen/profile_setting/profile_setting.dart';
@@ -11,8 +11,10 @@ import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
 import 'package:ionicons/ionicons.dart';
 
+import 'package:hufniture/data/services/shared_preference_helper.dart'; // Import SharedPreferencesHelper
+
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,40 +22,62 @@ class ProfileScreen extends StatelessWidget {
       appBar: const CustomAppbar(title: 'Trang Cá Nhân'),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            // Avatar
-            _buildAvatar(context),
-            SizedBox(
-              height: ConstraintConfig.kSpaceBetweenItemsMedium,
-            ),
-            // Name and ID
-            Text(
-              'Jason Huỳnh',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            RichText(
-              text: TextSpan(
-                style: Theme.of(context).textTheme.bodyMedium,
-                children: const <TextSpan>[
-                  TextSpan(
-                    text: 'ID: ',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+        child: FutureBuilder<Map<String, dynamic>?>(
+          future: SharedPreferencesHelper.getUser(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError ||
+                !snapshot.hasData ||
+                snapshot.data == null) {
+              return Center(
+                child: Text(
+                  'Không thể tải thông tin người dùng',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              );
+            }
+
+            final user = snapshot.data!;
+
+            return Column(
+              children: [
+                // Avatar
+                //_buildAvatar(context),
+                SizedBox(
+                  height: ConstraintConfig.kSpaceBetweenItemsMedium,
+                ),
+                // Name and ID
+                Text(
+                  user['fullName'] ?? 'Tên người dùng',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                RichText(
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    children: <TextSpan>[
+                      const TextSpan(
+                        text: 'ID: ',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: user['id'] ?? 'ID người dùng',
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: 'US-1241415',
-                  ),
-                ],
-              ),
-            ),
-            // Profile custom and orders
-            _buildUserPanel(context),
-            SizedBox(
-              height: ConstraintConfig.kSpaceBetweenItemsMedium,
-            ),
-            // List of actions
-            _buildUserAction(context)
-          ],
+                ),
+                // Profile custom and orders
+                _buildUserPanel(context),
+                SizedBox(
+                  height: ConstraintConfig.kSpaceBetweenItemsMedium,
+                ),
+                // List of actions
+                _buildUserAction(context),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -179,6 +203,9 @@ class ProfileScreen extends StatelessWidget {
                       text: 'Có',
                       onPressed: () {
                         // Handle Logout
+                        SharedPreferencesHelper.clear();
+                        RouteConfig.navigateTo(context, LoginScreen(),
+                            pushScreenType: PushScreenType.pushAndRemoveUntil);
                       },
                     ),
                   ),
@@ -248,20 +275,22 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Align _buildAvatar(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(200),
-        child: CachedNetworkImage(
-          width: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
-          height: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
-          fit: BoxFit.contain,
-          imageUrl: //Replace later
-              'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436200.jpg?size=338&ext=jpg&ga=GA1.1.1141335507.1717891200&semt=ais_user',
-          placeholder: (context, url) => const LoadingIndicator(),
-        ),
-      ),
-    );
-  }
+  // Align _buildAvatar(BuildContext context) {
+  //   return Align(
+  //     alignment: Alignment.center,
+  //     child: ClipRRect(
+  //       borderRadius: BorderRadius.circular(200),
+  //       child: Image.network(
+  //         'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436200.jpg?size=338&ext=jpg&ga=GA1.1.1141335507.1717891200&semt=ais_user',
+  //         width: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
+  //         height: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
+  //         fit: BoxFit.contain,
+  //         loadingBuilder: (context, child, loadingProgress) {
+  //           if (loadingProgress == null) return child;
+  //           return const LoadingIndicator();
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 }

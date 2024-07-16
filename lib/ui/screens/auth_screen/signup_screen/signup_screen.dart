@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
+import 'package:hufniture/configs/validators.dart';
+import 'package:hufniture/data/models/Auth/user_register.dart';
+import 'package:hufniture/data/services/AuthService/auth_service.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/input/app_input.dart';
@@ -14,6 +17,9 @@ class SignupScreen extends StatelessWidget {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
   final TextEditingController confirmPwController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +42,40 @@ class SignupScreen extends StatelessWidget {
                 child: AppButton(
                   width: ConstraintConfig.getWidth(context) / 2,
                   text: 'Đăng ký',
-                  onPressed: () {
-                    // Handle signup
+                  onPressed: () async {
+                    // Check valid form value
+                    if (_formKey.currentState!.validate()) {
+                      // Handle signup
+                      // Tạo đối tượng UserRegister từ các giá trị nhập vào
+                      final user = UserRegister(
+                        name: nameController.text,
+                        email: emailController.text,
+                        phoneNumber: phoneController.text,
+                        password: pwController.text,
+                        confirmPassword: confirmPwController.text,
+                      );
+
+                      // Gọi API để đăng ký
+                      final result = await _authService.registerUser(user);
+                      //DK thành công
+                      if (result == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 3),
+                              content: Text('Đăng ký thành công!')),
+                        );
+                      }
+                      //DK thất bại
+                      else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              backgroundColor: Colors.red,
+                              duration: const Duration(seconds: 4),
+                              content: Text(result)),
+                        );
+                      }
+                    }
                   },
                 ),
               ),
@@ -61,6 +99,7 @@ class SignupScreen extends StatelessWidget {
 
   Form buildSignupForm() {
     return Form(
+      key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -68,6 +107,7 @@ class SignupScreen extends StatelessWidget {
             controller: nameController,
             label: 'Tên',
             hintText: 'Jason Huynh',
+            validator: Validators.validateNull,
           ),
           SizedBox(
             height: ConstraintConfig.kSpaceBetweenItemsMedium,
@@ -77,6 +117,7 @@ class SignupScreen extends StatelessWidget {
             label: 'Email',
             hintText: 'abc@gmail.com',
             inputType: TextInputType.emailAddress,
+            validator: Validators.validateEmail,
           ),
           SizedBox(
             height: ConstraintConfig.kSpaceBetweenItemsMedium,
@@ -85,6 +126,7 @@ class SignupScreen extends StatelessWidget {
             controller: phoneController,
             label: 'Số điện thoại',
             hintText: '0909 255 761',
+            validator: Validators.validatePhoneNumber,
             inputType: TextInputType.phone,
             formatter: [
               // only allow from [0-9]
@@ -101,6 +143,7 @@ class SignupScreen extends StatelessWidget {
             label: 'Mật khẩu',
             hintText: '●●●●●●●●',
             isObscure: true,
+            validator: Validators.validatePassword,
           ),
           SizedBox(
             height: ConstraintConfig.kSpaceBetweenItemsMedium,
@@ -110,6 +153,8 @@ class SignupScreen extends StatelessWidget {
             label: 'Nhập lại mật khẩu',
             hintText: '●●●●●●●●',
             isObscure: true,
+            validator: (value) =>
+                Validators.validatePasswordMatch(pwController.text, value),
           ),
         ],
       ),

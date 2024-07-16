@@ -6,7 +6,9 @@ import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/data/helpers/banner_model.dart';
+import 'package:hufniture/data/models/category.dart';
 import 'package:hufniture/data/services/BannerService/banner_service.dart';
+import 'package:hufniture/data/services/CategoryService/category_service.dart';
 import 'package:hufniture/ui/widgets/category/category_home/category_home.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
@@ -130,11 +132,25 @@ class HomeScreen extends StatelessWidget {
   SizedBox _buildCategoryList() {
     return SizedBox(
       height: 70,
-      child: ListView.builder(
-        itemCount: 10, // add later
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return const CategoryHome();
+      child: FutureBuilder<List<FurnitureCategoryList>>(
+        future: CategoryService.fetchCategories(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(child: const Text('Lỗi'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Không có danh mục nào'));
+          } else {
+            final categories = snapshot.data!;
+            return ListView.builder(
+              itemCount: categories.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return CategoryHome(category: categories[index]);
+              },
+            );
+          }
         },
       ),
     );

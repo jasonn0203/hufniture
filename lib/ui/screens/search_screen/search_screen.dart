@@ -196,7 +196,7 @@ class _SearchScreenState extends State<SearchScreen> {
           min: 0,
           max: (_priceSteps.length - 1).toDouble(),
           divisions: _priceSteps.length - 1,
-          label: Helpers.formatPrice(_priceSteps[_currentStepIndex]),
+          label: Helpers.formatPrice(_priceSteps[_currentStepIndex]).toString(),
           onChanged: (double value) {
             setModalState(() {
               _currentStepIndex = value.round();
@@ -208,8 +208,9 @@ class _SearchScreenState extends State<SearchScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(Helpers.formatPrice(_priceSteps[0])),
-            Text(Helpers.formatPrice(_priceSteps[_priceSteps.length - 1])),
+            Text(Helpers.formatPrice(_priceSteps[0]) as String),
+            Text(Helpers.formatPrice(_priceSteps[_priceSteps.length - 1])
+                as String),
           ],
         ),
       ],

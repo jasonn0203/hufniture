@@ -142,7 +142,8 @@ class _CartScreenState extends State<CartScreen> {
                       color: ColorConfig.accentColor,
                       fontWeight: FontWeight.normal),
                 ),
-                AppCustomText(content: Helpers.formatPrice(totalPrice)),
+                AppCustomText(
+                    content: Helpers.formatPrice(totalPrice).toString()),
               ],
             ),
             SizedBox(
@@ -236,7 +237,7 @@ class _CartScreenState extends State<CartScreen> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleSmall),
-        subtitle: Text(Helpers.formatPrice(item.price),
+        subtitle: Text(Helpers.formatPrice(item.price).toString(),
             style: Theme.of(context).textTheme.bodySmall),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
