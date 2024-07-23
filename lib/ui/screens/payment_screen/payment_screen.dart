@@ -1,17 +1,28 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/data/helpers/cart_item.dart';
+import 'package:hufniture/data/models/order_list_response.dart';
+import 'package:hufniture/data/services/AuthService/auth_service.dart';
+import 'package:hufniture/data/services/OrderService/order_service.dart';
+import 'package:hufniture/data/services/shared_preference_helper.dart';
 import 'package:hufniture/ui/screens/payment_screen/payment_address_screen/payment_address_screen.dart';
+import 'package:hufniture/ui/screens/payment_screen/payment_fail_screen/payment_fail_screen.dart';
+import 'package:hufniture/ui/screens/payment_screen/payment_successful_screen/payment_successful_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 import 'package:ionicons/ionicons.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key, required this.totalPrice});
+  const PaymentScreen(
+      {super.key, required this.totalPrice, required this.cartItemsList});
   final double totalPrice;
+  final List<CartItem> cartItemsList;
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -19,8 +30,69 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   String? selectedValue = 'COD';
+  String? userAddress;
+  String? userPhoneNumber;
+  final AuthService _authService = AuthService();
+  final OrderService _orderService = OrderService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    final user = await SharedPreferencesHelper.getUser();
+    if (user == null) {
+      debugPrint('Không tìm thấy thông tin người dùng.');
+      return;
+    }
+
+    final userInfo = await _authService.getUserInfo(user['id']);
+    if (userInfo != null) {
+      setState(() {
+        userAddress = userInfo['address'];
+        userPhoneNumber = userInfo['phoneNumber'];
+      });
+    }
+  }
+
+  Future<void> _handlePayment() async {
+    if (userAddress == null || userAddress!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          duration: Durations.long4,
+          content: Text(
+              'Bạn cần cập nhật địa chỉ trước khi tiến hành thanh toán !!'),
+        ),
+      );
+    } else {
+      // Tiến hành quá trình thanh toán
+      //Nếu thành công chuyển qua trang PaymentSuccessfulScreen, ngược lại thất bại thì chuyển sang PaymentFailScreen
+      try {
+        final success = await _orderService.placeOrder(widget.cartItemsList);
+        if (success) {
+          // Clear cart items
+          await SharedPreferencesHelper.clearCartItems();
+
+          RouteConfig.navigateTo(
+            context,
+            const PaymentSuccessfulScreen(),
+          );
+        } else {
+          RouteConfig.navigateTo(context, const PaymentFailScreen());
+        }
+      } catch (e) {
+        RouteConfig.navigateTo(context, const PaymentFailScreen());
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = ConstraintConfig.getWidth(context);
+    final double screenHeight = ConstraintConfig.getHeight(context);
     return Scaffold(
       appBar: const CustomAppbar(title: 'Thanh Toán'),
       body: Padding(
@@ -43,7 +115,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   GestureDetector(
                     onTap: () {
                       RouteConfig.navigateTo(
-                          context, const PaymentAddressScreen());
+                          context,
+                          PaymentAddressScreen(
+                            onUpdateAddress: _loadUserInfo,
+                            initialAddress: userAddress,
+                          ));
                     },
                     child: const Icon(
                       Ionicons.create_outline,
@@ -56,35 +132,51 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 height: ConstraintConfig.kSpaceBetweenItemsMedium,
               ),
               Container(
-                padding: const EdgeInsets.all(12),
-                width: ConstraintConfig.getWidth(context),
-                height: ConstraintConfig.getHeight(context) * 0.116,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(24)),
-                    color: ColorConfig.secondaryColor),
+                padding: EdgeInsets.all(screenWidth * 0.03),
+                width: screenWidth * 0.9,
+                height: screenHeight * 0.14,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(screenWidth * 0.06)),
+                  color: ColorConfig.secondaryColor,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(Ionicons.location_outline),
                         SizedBox(
-                          width: ConstraintConfig.kSpaceBetweenItemsMedium,
+                          width: screenWidth * 0.03,
                         ),
-                        const AppCustomText(
-                            content: '828 Sư Vạn Hạnh, Quận 10'),
+                        Expanded(
+                          child: Text(
+                            userAddress ?? 'Chưa có địa chỉ',
+                            maxLines: null,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.04,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     Row(
                       children: [
                         const Icon(Ionicons.call_outline),
                         SizedBox(
-                          width: ConstraintConfig.kSpaceBetweenItemsMedium,
+                          width: screenWidth * 0.03,
                         ),
-                        const AppCustomText(content: '858 2881 470'),
+                        Text(
+                          userPhoneNumber ?? 'Chưa có số điện thoại',
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -116,9 +208,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               Column(
                 children: [
-                  _buildOrderItem('Ghế Sofa', 1),
-                  _buildOrderItem('Ghế dựa', 2),
-                  _buildOrderItem('Kệ tủ', 4),
+                  for (final item in widget.cartItemsList)
+                    _buildOrderItem(item),
                 ],
               ),
               SizedBox(
@@ -164,7 +255,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               SizedBox(
                 height: ConstraintConfig.kSpaceBetweenItemsUltraLarge,
               ),
-              AppButton(text: 'Thanh Toán Ngay', onPressed: () {}),
+              AppButton(text: 'Thanh Toán Ngay', onPressed: _handlePayment),
               SizedBox(
                 height: ConstraintConfig.kSpaceBetweenItemsMedium,
               ),
@@ -228,20 +319,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildOrderItem(String name, int quantity) {
+  Widget _buildOrderItem(CartItem item) {
     return Row(
       children: [
-        Expanded(child: AppCustomText(content: name)),
-        Expanded(child: AppCustomText(content: 'x $quantity', color: true)),
+        Expanded(
+          child: Text(
+            item.name,
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+          ),
+        ),
+        Expanded(
+            child: AppCustomText(content: 'x ${item.quantity}', color: true)),
       ],
     );
   }
-}
 
-List<DropdownMenuItem<String>> get dropdownItems {
-  List<DropdownMenuItem<String>> menuItems = [
-    const DropdownMenuItem(value: "COD", child: Text("COD")),
-    const DropdownMenuItem(value: "Paypal", child: Text("Paypal")),
-  ];
-  return menuItems;
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      const DropdownMenuItem(value: "COD", child: Text("COD")),
+      const DropdownMenuItem(value: "Paypal", child: Text("Paypal")),
+    ];
+    return menuItems;
+  }
 }

@@ -84,6 +84,7 @@ class _AppInputState extends State<AppInput> {
           keyboardType: widget.inputType,
           inputFormatters: widget.formatter,
           onTap: widget.onTap,
+
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),

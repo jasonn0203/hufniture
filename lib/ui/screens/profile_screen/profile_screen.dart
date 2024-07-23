@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
@@ -5,6 +6,7 @@ import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:hufniture/ui/screens/order_screen/order_list_screen/order_list_screen.dart';
 import 'package:hufniture/ui/screens/profile_screen/profile_information/profile_information.dart';
+import 'package:hufniture/ui/screens/profile_screen/profile_information/profile_update_screen.dart';
 import 'package:hufniture/ui/screens/profile_screen/profile_setting/profile_setting.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
@@ -28,7 +30,6 @@ class ProfileScreen extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-
             if (snapshot.hasError ||
                 !snapshot.hasData ||
                 snapshot.data == null) {
@@ -41,39 +42,13 @@ class ProfileScreen extends StatelessWidget {
             }
 
             final user = snapshot.data!;
-
             return Column(
               children: [
-                // Avatar
-                //_buildAvatar(context),
-                SizedBox(
-                  height: ConstraintConfig.kSpaceBetweenItemsMedium,
-                ),
-                // Name and ID
-                Text(
-                  user['fullName'] ?? 'Tên người dùng',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                RichText(
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    children: <TextSpan>[
-                      const TextSpan(
-                        text: 'ID: ',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(
-                        text: user['id'] ?? 'ID người dùng',
-                      ),
-                    ],
-                  ),
-                ),
-                // Profile custom and orders
-                _buildUserPanel(context),
-                SizedBox(
-                  height: ConstraintConfig.kSpaceBetweenItemsMedium,
-                ),
-                // List of actions
+                _buildAvatar(context),
+                SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
+                _buildUserInfo(context, user),
+                _buildUserPanel(context, user),
+                SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
                 _buildUserAction(context),
               ],
             );
@@ -83,94 +58,94 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildUserInfo(BuildContext context, Map<String, dynamic> user) {
+    return Column(
+      children: [
+        Text(
+          user['fullName'] ?? 'Tên người dùng',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        RichText(
+          text: TextSpan(
+            style: Theme.of(context).textTheme.bodyMedium,
+            children: <TextSpan>[
+              const TextSpan(
+                text: 'ID: ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextSpan(
+                text: user['id'] ?? 'ID người dùng',
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Expanded _buildUserAction(BuildContext context) {
     return Expanded(
       child: ListView(
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            splashColor: ColorConfig.primaryColor.withOpacity(0.25),
+          _buildListTile(
+            context,
+            icon: Ionicons.settings_outline,
+            title: 'Cài Đặt',
             onTap: () {
               RouteConfig.navigateTo(context, const ProfileSetting());
             },
-            leading: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                    color: ColorConfig.primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-                child: const Icon(
-                  Ionicons.settings_outline,
-                  size: 25,
-                  color: ColorConfig.secondaryColor,
-                )),
-            title: Text(
-              'Cài Đặt',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                  ),
-            ),
           ),
-          ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            splashColor: ColorConfig.primaryColor.withOpacity(0.25),
+          _buildListTile(
+            context,
+            icon: Ionicons.information_circle_outline,
+            title: 'Trợ Giúp',
             onTap: () {},
-            leading: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                    color: ColorConfig.primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-                child: const Icon(
-                  Ionicons.information_circle_outline,
-                  size: 25,
-                  color: ColorConfig.secondaryColor,
-                )),
-            title: Text(
-              'Trợ Giúp',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                  ),
-            ),
           ),
-          ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            splashColor: ColorConfig.primaryColor.withOpacity(0.25),
-            onTap: () {
-              // Show log out bottom sheet confirm
-              _showLogOuBottomSheet(context);
-            },
-            leading: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                    color: ColorConfig.primaryColor,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-                child: const Icon(
-                  Ionicons.log_out_outline,
-                  size: 25,
-                  color: ColorConfig.secondaryColor,
-                )),
-            title: Text(
-              'Đăng Xuất',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                  ),
-            ),
-          )
+          _buildListTile(
+            context,
+            icon: Ionicons.log_out_outline,
+            title: 'Đăng Xuất',
+            onTap: () => _showLogoutBottomSheet(context),
+          ),
         ],
       ),
     );
   }
 
-  Future<dynamic> _showLogOuBottomSheet(BuildContext context) {
+  ListTile _buildListTile(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required VoidCallback onTap}) {
+    return ListTile(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      splashColor: ColorConfig.primaryColor.withOpacity(0.25),
+      onTap: onTap,
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: const BoxDecoration(
+          color: ColorConfig.primaryColor,
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+        ),
+        child: Icon(
+          icon,
+          size: 25,
+          color: ColorConfig.secondaryColor,
+        ),
+      ),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.normal,
+            ),
+      ),
+    );
+  }
+
+  Future<void> _showLogoutBottomSheet(BuildContext context) async {
     return showModalBottomSheet(
       barrierColor: ColorConfig.primaryColor.withOpacity(0.2),
       context: context,
@@ -178,7 +153,7 @@ class ProfileScreen extends StatelessWidget {
       builder: (context) {
         return Container(
           height: MediaQuery.of(context).size.height *
-              0.2, //20% of the screen height
+              0.2, // 20% of the screen height
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
@@ -186,7 +161,6 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: AppButton(
@@ -202,15 +176,17 @@ class ProfileScreen extends StatelessWidget {
                     child: AppButton(
                       text: 'Có',
                       onPressed: () {
-                        // Handle Logout
                         SharedPreferencesHelper.clear();
-                        RouteConfig.navigateTo(context, LoginScreen(),
-                            pushScreenType: PushScreenType.pushAndRemoveUntil);
+                        RouteConfig.navigateTo(
+                          context,
+                          LoginScreen(),
+                          pushScreenType: PushScreenType.pushAndRemoveUntil,
+                        );
                       },
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         );
@@ -218,79 +194,81 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Container _buildUserPanel(BuildContext context) {
+  Container _buildUserPanel(BuildContext context, Map<String, dynamic> user) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: const BoxDecoration(
-          color: ColorConfig.primaryColor,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+        color: ColorConfig.primaryColor,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GestureDetector(
+          _buildPanelItem(
+            context,
+            icon: Ionicons.person,
+            title: 'Cá Nhân',
             onTap: () {
-              RouteConfig.navigateTo(context, const ProfileInformation());
+              RouteConfig.navigateTo(
+                context,
+                const ProfileUpdateScreen(),
+              );
             },
-            child: const Column(
-              children: [
-                Icon(
-                  Ionicons.person,
-                  color: ColorConfig.secondaryColor,
-                  size: 30,
-                ),
-                Text(
-                  'Cá Nhân',
-                  style: TextStyle(color: ColorConfig.secondaryColor),
-                )
-              ],
-            ),
           ),
           Container(
             width: 2,
             height: 50,
             color: ColorConfig.secondaryColor,
           ),
-          GestureDetector(
+          _buildPanelItem(
+            context,
+            icon: Ionicons.reader,
+            title: 'Đơn Hàng',
             onTap: () {
               RouteConfig.navigateTo(context, OrderListScreen());
             },
-            child: const Column(
-              children: [
-                Icon(
-                  Ionicons.reader,
-                  color: ColorConfig.secondaryColor,
-                  size: 30,
-                ),
-                Text(
-                  'Đơn Hàng',
-                  style: TextStyle(color: ColorConfig.secondaryColor),
-                )
-              ],
-            ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  // Align _buildAvatar(BuildContext context) {
-  //   return Align(
-  //     alignment: Alignment.center,
-  //     child: ClipRRect(
-  //       borderRadius: BorderRadius.circular(200),
-  //       child: Image.network(
-  //         'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436200.jpg?size=338&ext=jpg&ga=GA1.1.1141335507.1717891200&semt=ais_user',
-  //         width: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
-  //         height: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
-  //         fit: BoxFit.contain,
-  //         loadingBuilder: (context, child, loadingProgress) {
-  //           if (loadingProgress == null) return child;
-  //           return const LoadingIndicator();
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
+  Column _buildPanelItem(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required VoidCallback onTap}) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Icon(
+            icon,
+            color: ColorConfig.secondaryColor,
+            size: 30,
+          ),
+        ),
+        Text(
+          title,
+          style: TextStyle(color: ColorConfig.secondaryColor),
+        ),
+      ],
+    );
+  }
+
+  Align _buildAvatar(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(200),
+        child: CachedNetworkImage(
+          width: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
+          height: ConstraintConfig.responsive(context, 150.0, 130.0, 120.0),
+          fit: BoxFit.contain,
+          imageUrl: 'https://loremflickr.com/320/240/user,face',
+          placeholder: (context, url) => const LoadingIndicator(),
+        ),
+      ),
+    );
+  }
 }

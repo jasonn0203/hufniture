@@ -25,14 +25,14 @@ class FurnitureCategory {
 
 class FurnitureCategoryList {
   String? id;
-  String? name;
+  late String name;
   String? categoryIcon;
   Null? furnitureProducts;
   Null? furnitureTypes;
 
   FurnitureCategoryList(
       {this.id,
-      this.name,
+      required this.name,
       this.categoryIcon,
       this.furnitureProducts,
       this.furnitureTypes});

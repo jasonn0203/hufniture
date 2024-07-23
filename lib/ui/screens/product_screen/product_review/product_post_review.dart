@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
+import 'package:hufniture/data/services/ReviewService/review_service.dart';
+import 'package:hufniture/data/services/shared_preference_helper.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 
 class ProductPostReview extends StatefulWidget {
-  const ProductPostReview({super.key});
+  final String productId;
+  final VoidCallback onReviewSubmitted;
+
+  const ProductPostReview({
+    Key? key,
+    required this.productId,
+    required this.onReviewSubmitted,
+  }) : super(key: key);
 
   @override
   State<ProductPostReview> createState() => _ProductPostReviewState();
@@ -14,6 +23,26 @@ class ProductPostReview extends StatefulWidget {
 class _ProductPostReviewState extends State<ProductPostReview> {
   final TextEditingController reviewController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  Future<void> _submitReview() async {
+    if (_formKey.currentState!.validate()) {
+      final user = await SharedPreferencesHelper.getUser();
+      if (user != null) {
+        final userId = user['id']; // Adjust based on your user model
+        final content = reviewController.text;
+        try {
+          await ReviewService.addReview(widget.productId, userId, content);
+          // Handle success, e.g., show a confirmation message
+          widget.onReviewSubmitted(); // Notify that review was submitted
+          Navigator.pop(context);
+        } catch (e) {
+          // Handle error, e.g., show an error message
+          print('Failed to submit review: $e');
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +58,7 @@ class _ProductPostReviewState extends State<ProductPostReview> {
               ),
               Expanded(
                 child: TextFormField(
+                  controller: reviewController,
                   onTapOutside: (event) {
                     FocusManager.instance.primaryFocus?.unfocus();
                   },
@@ -65,15 +95,7 @@ class _ProductPostReviewState extends State<ProductPostReview> {
               SizedBox(
                 height: ConstraintConfig.kSpaceBetweenItemsUltraLarge,
               ),
-              AppButton(
-                  text: 'Gửi đánh giá',
-                  onPressed: () {
-                    // Check valid form value
-                    if (_formKey.currentState!.validate()) {
-                      // ignore: avoid_print
-                      print('OK');
-                    }
-                  }),
+              AppButton(text: 'Gửi đánh giá', onPressed: _submitReview),
               SizedBox(
                 height: ConstraintConfig.kSpaceBetweenItemsUltraLarge,
               ),

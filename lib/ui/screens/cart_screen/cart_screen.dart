@@ -10,43 +10,44 @@ import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:hufniture/data/services/shared_preference_helper.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+  const CartScreen({Key? key}) : super(key: key);
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  List<CartItem> cartItemsList = [
-    CartItem(
-        id: 1,
-        image: '${Helpers.imgUrl}/kitchen_cart_2.png',
-        name: 'Kệ bếp',
-        price: 200000.0,
-        quantity: 1),
-    CartItem(
-        id: 2,
-        image: '${Helpers.imgUrl}/kitchen_cart.png',
-        name: 'Ghế Sofa Bolero',
-        price: 420000.0,
-        quantity: 1),
-    CartItem(
-        id: 3,
-        image: '${Helpers.imgUrl}/kitchen_cart_2.png',
-        name: 'Kệ bếp',
-        price: 246000.0,
-        quantity: 1),
-  ];
+  List<CartItem> cartItemsList = [];
 
-  void updateCartQuantity(int index, int newQuantity) => setState(() {
-        cartItemsList[index].quantity = newQuantity;
-      });
+  @override
+  void initState() {
+    super.initState();
+    loadCartItems();
+  }
 
-  void deleteCartItem(int id) => setState(() {
-        cartItemsList.removeWhere((item) => item.id == id);
-      });
+  void loadCartItems() async {
+    List<CartItem> cartItems = await SharedPreferencesHelper.getCartItems();
+    setState(() {
+      cartItemsList = cartItems;
+    });
+  }
+
+  void updateCartQuantity(int index, int newQuantity) async {
+    setState(() {
+      cartItemsList[index].quantity = newQuantity;
+    });
+    await SharedPreferencesHelper.saveCartItems(cartItemsList);
+  }
+
+  void deleteCartItem(String id) async {
+    setState(() {
+      cartItemsList.removeWhere((item) => item.id == id);
+    });
+    await SharedPreferencesHelper.saveCartItems(cartItemsList);
+  }
 
   double calculateTotalPrice() {
     double total = 0.0;
@@ -79,7 +80,8 @@ class _CartScreenState extends State<CartScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset('${Helpers.imgUrl}/cart_empty.png'),
+          Image.asset(
+              'assets/images/cart_empty.png'), // Replace with your empty cart image
           SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
           const AppCustomText(
             content: 'Không có sản phẩm nào',
@@ -97,10 +99,11 @@ class _CartScreenState extends State<CartScreen> {
         Align(
           alignment: Alignment.topRight,
           child: GestureDetector(
-            onTap: () {
+            onTap: () async {
               setState(() {
                 cartItemsList.clear();
               });
+              await SharedPreferencesHelper.saveCartItems(cartItemsList);
             },
             child: const Icon(
               Ionicons.trash_bin,
@@ -200,6 +203,7 @@ class _CartScreenState extends State<CartScreen> {
                       context,
                       PaymentScreen(
                         totalPrice: grandTotal,
+                        cartItemsList: cartItemsList,
                       ));
                 })
           ],
@@ -227,7 +231,7 @@ class _CartScreenState extends State<CartScreen> {
         ],
       ),
       child: ListTile(
-        leading: Image.asset(
+        leading: Image.network(
           item.image,
           width: 50,
           height: 50,

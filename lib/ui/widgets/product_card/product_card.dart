@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hufniture/configs/constraint_config.dart';
+import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/data/helpers/product_card_model.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hufniture/ui/screens/product_screen/product_detail/product_detail.dart';
+import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
+import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({Key? key, required this.productCard}) : super(key: key);
@@ -9,11 +14,20 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vndCurrencyFormat = "${productCard.prodPrice.toStringAsFixed(0)} VND";
+    final screenWidth = ConstraintConfig.getWidth(context);
 
     return GestureDetector(
       onTap: () {
-        // Navigate to product details or perform other actions
+        // Navigate to product details
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetail(
+              productId: productCard.id,
+              productName: productCard.prodName,
+            ),
+          ),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +44,7 @@ class ProductCard extends StatelessWidget {
               fit: BoxFit.contain,
               alignment: Alignment.center,
               placeholder: (context, url) => const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
@@ -42,7 +56,10 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   productCard.prodName,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontSize: screenWidth > 300 ? 18 : 12),
                 ),
                 const SizedBox(height: 8.0),
                 Text(
@@ -52,9 +69,11 @@ class ProductCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 8.0),
-                Text(
-                  vndCurrencyFormat,
-                  style: Theme.of(context).textTheme.titleSmall,
+                AppCustomText(
+                  content: Helpers.formatPrice(
+                    productCard.prodPrice,
+                  ),
+                  color: true,
                 ),
               ],
             ),

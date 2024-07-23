@@ -5,7 +5,9 @@ import 'package:hufniture/configs/helpers.dart';
 import 'package:hufniture/configs/theme_config.dart';
 
 import 'package:hufniture/ui/screens/app_navigation/app_navigation.dart';
-import 'package:hufniture/ui/screens/auth_screen/login_screen/login_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/auth_selection_screen/auth_selection_screen.dart';
+import 'package:hufniture/ui/screens/splash_screen/splash_screen.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -38,7 +40,18 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       theme: CustomTheme.lightTheme,
-      home: const AppNavigation(index: 0),
+      home: FutureBuilder<bool>(
+        future: checkUserLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData && snapshot.data!) {
+            return const AppNavigation(index: 0);
+          } else {
+            return const SplashScreen();
+          }
+        },
+      ),
     );
   }
 }

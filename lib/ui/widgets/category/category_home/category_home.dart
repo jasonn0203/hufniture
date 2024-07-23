@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
+import 'package:hufniture/configs/route_config.dart';
 import 'package:hufniture/data/models/category.dart';
+import 'package:hufniture/ui/screens/category/category_by_room_screen/category_room_by_name_type.dart';
 
 class CategoryHome extends StatelessWidget {
   const CategoryHome({super.key, required this.category});
@@ -10,7 +12,14 @@ class CategoryHome extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          RouteConfig.navigateTo(
+              context,
+              CategoryRoomByNameTypeScreen(
+                categoryName: category.name,
+                categoryId: category.id,
+              ));
+        },
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: const BoxDecoration(

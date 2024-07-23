@@ -1,12 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
-import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/data/services/ProductService/product_service.dart';
 import 'package:hufniture/ui/screens/search_screen/search_result/search_result.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
+import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -17,35 +21,56 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final ProductService productService = ProductService();
+  final TextEditingController minPriceController = TextEditingController();
+  final TextEditingController maxPriceController = TextEditingController();
   // Price value ( define later with api)
   final List<double> _priceSteps = [500000, 1000000, 1500000, 2000000];
 
   int _currentStepIndex = 0;
+  double? minPrice;
+  double? maxPrice;
+  List<String> categoryIds = [];
 
+  Future<List<FilterProduct>>? filteredProducts;
+  List<Category>? categories;
+  List<Color>? colors;
   // Replace with data in API
-  final List<String> _categories = [
-    'Phòng Ngủ',
-    'Phòng Khách',
-    'Phòng Tắm',
-    'Phòng Bếp',
-    'Phòng Ăn',
-  ];
+  final List<String> _categories = [];
 
   // A list of selected categories
-  final Set<String> _selectedCategories = {};
+  final Set<Category> _selectedCategories = {};
 
   // List of selectable colors
-  final List<Color> _selectableColors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange,
-    Colors.pink,
-  ];
+  // final List<Color> _selectableColors = [
+  //   Colors.red,
+  //   Colors.blue,
+  //   Colors.green,
+  //   Colors.yellow,
+  //   Colors.orange,
+  //   Colors.pink,
+  // ];
 
   // Currently selected color
-  Color? _selectedColor;
+  // Color? _selectedColor;
+
+  Future<void> _loadFilterData() async {
+    try {
+      final fetchedCategories = await productService.getCategories();
+
+      setState(() {
+        categories = fetchedCategories;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFilterData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,16 +184,83 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
-              _buildPriceRangeSlider(context, setModalState),
+              //_buildPriceRangeSlider(context, setModalState),
+              AppCustomText(
+                content: 'Khoảng Giá',
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(color: ColorConfig.accentColor),
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: TextField(
+                      controller: minPriceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Giá thấp',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorFormatter(),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Flexible(
+                    flex: 1,
+                    child: TextField(
+                      controller: maxPriceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Giá cao',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorFormatter(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
               _buildCategoryFilter(context, setModalState),
-              SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
-              _buildColorFilter(context, setModalState),
+              // SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
+              // _buildColorFilter(context, setModalState),
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
               AppButton(
                 text: 'Lọc',
-                onPressed: () {
-                  RouteConfig.navigateTo(context, const SearchResult());
+                onPressed: () async {
+                  //Lọc và load kết quả
+                  final minPriceText =
+                      minPriceController.text.replaceAll(RegExp(r'[^\d]'), '');
+                  final maxPriceText =
+                      maxPriceController.text.replaceAll(RegExp(r'[^\d]'), '');
+                  final minPriceValue = double.tryParse(minPriceText);
+                  final maxPriceValue = double.tryParse(maxPriceText);
+
+                  // Lọc và load kết quả
+                  final results = await productService.getFilteredProducts(
+                    minPrice: minPriceValue,
+                    maxPrice: maxPriceValue,
+                    categoryIds:
+                        _selectedCategories.map((cat) => cat.id).toList(),
+                  );
+
+                  // Điều hướng đến trang kết quả tìm kiếm với dữ liệu lọc
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchResult(
+                        filteredProducts: results,
+                      ),
+                    ),
+                  );
                 },
               ),
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
@@ -228,15 +320,18 @@ class _SearchScreenState extends State<SearchScreen> {
               .titleSmall
               ?.copyWith(color: ColorConfig.accentColor),
         ),
+        const SizedBox(
+          height: 4,
+        ),
         Wrap(
-          spacing: 4.0,
-          runSpacing: 1.0,
-          children: _categories.map((category) {
+          spacing: 8.0,
+          runSpacing: 2.0,
+          children: categories!.map((category) {
             final isSelected = _selectedCategories.contains(category);
             return FilterChip(
               side: BorderSide.none,
               label: Text(
-                category,
+                category.name,
                 style: TextStyle(
                   color: isSelected ? Colors.white : ColorConfig.mainTextColor,
                 ),
@@ -261,50 +356,77 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildColorFilter(BuildContext context, StateSetter setModalState) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppCustomText(
-          content: 'Màu Sắc',
-          textStyle: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: ColorConfig.accentColor),
-        ),
-        Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
-          children: _selectableColors.map((color) {
-            return GestureDetector(
-              onTap: () {
-                setModalState(() {
-                  // Toggle color selection
-                  if (_selectedColor == color) {
-                    _selectedColor = null;
-                  } else {
-                    _selectedColor = color;
-                  }
-                });
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color,
-                  border: Border.all(
-                    color: _selectedColor == color
-                        ? ColorConfig.primaryColor
-                        : Colors.transparent,
-                    width: 4.0,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
+  // Widget _buildColorFilter(BuildContext context, StateSetter setModalState) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       AppCustomText(
+  //         content: 'Màu Sắc',
+  //         textStyle: Theme.of(context)
+  //             .textTheme
+  //             .titleSmall
+  //             ?.copyWith(color: ColorConfig.accentColor),
+  //       ),
+  //       Wrap(
+  //         spacing: 8.0,
+  //         runSpacing: 8.0,
+  //         children: _selectableColors.map((color) {
+  //           return GestureDetector(
+  //             onTap: () {
+  //               setModalState(() {
+  //                 // Toggle color selection
+  //                 if (_selectedColor == color) {
+  //                   _selectedColor = null;
+  //                 } else {
+  //                   _selectedColor = color;
+  //                 }
+  //               });
+  //             },
+  //             child: Container(
+  //               width: 40,
+  //               height: 40,
+  //               decoration: BoxDecoration(
+  //                 shape: BoxShape.circle,
+  //                 color: color,
+  //                 border: Border.all(
+  //                   color: _selectedColor == color
+  //                       ? ColorConfig.primaryColor
+  //                       : Colors.transparent,
+  //                   width: 4.0,
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         }).toList(),
+  //       ),
+  //     ],
+  //   );
+  // }
+}
+
+class ThousandsSeparatorFormatter extends TextInputFormatter {
+  final NumberFormat _formatter = NumberFormat('#,###');
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    // Remove all non-digit characters
+    final numericString = newValue.text.replaceAll(RegExp(r'\D'), '');
+
+    // Convert to int and format
+    final formattedString = _formatter.format(int.tryParse(numericString) ?? 0);
+
+    // Add currency symbol 'đ'
+    final newText = formattedString.isEmpty ? '' : '$formattedString đ';
+
+    // Adjust cursor position
+    final newSelection = TextSelection.collapsed(
+      offset: newText.length,
+    );
+
+    return TextEditingValue(
+      text: newText,
+      selection: newSelection,
     );
   }
 }

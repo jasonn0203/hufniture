@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hufniture/data/models/category.dart';
 import 'package:hufniture/data/services/CategoryService/category_service.dart';
 import 'package:hufniture/ui/screens/category/category_by_room_screen/category_room_by_name_type.dart';
-
-import 'package:hufniture/ui/screens/category/category_screen/category_product_with_type_screen.dart';
 import 'package:hufniture/ui/widgets/category/category_grid/category_grid.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 
@@ -40,7 +38,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     .toList();
 
                 return CategoryGrid(
-                  item: categories.map((category) => category.name!).toList(),
+                  item: categories.map((category) => category.name).toList(),
                   function: (String room) {
                     FurnitureCategoryList selectedCategory = categories
                         .firstWhere((category) => category.name == room);
@@ -48,7 +46,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => CategoryRoomByNameTypeScreen(
-                            categoryId: selectedCategory.id),
+                          categoryId: selectedCategory.id,
+                          categoryName: selectedCategory.name,
+                        ),
                       ),
                     );
                   },

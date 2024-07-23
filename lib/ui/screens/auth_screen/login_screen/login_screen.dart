@@ -8,20 +8,25 @@ import 'package:hufniture/data/services/AuthService/auth_service.dart';
 import 'package:hufniture/ui/screens/app_navigation/app_navigation.dart';
 import 'package:hufniture/ui/screens/auth_screen/forgot_password_screen/forgot_password_screen.dart';
 import 'package:hufniture/ui/screens/auth_screen/signup_screen/signup_screen.dart';
+import 'package:hufniture/ui/screens/auth_screen/youtube_tutorial_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
 import 'package:hufniture/ui/widgets/input/app_input.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
-  final TextEditingController emailController = TextEditingController();
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
 
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
   final AuthService _authService = AuthService();
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +115,19 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ],
-        )
+        ),
+        // Youtube link
+        TextButton(
+          style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
+          onPressed: () {
+            // Handle route to youtube link
+            RouteConfig.navigateTo(context, const YoutubePlayerScreen());
+          },
+          child: Text(
+            'Xem hướng dẫn',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
       ],
     );
   }
@@ -148,43 +165,54 @@ class LoginScreen extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: AppButton(
-                  width: ConstraintConfig.getWidth(context) / 2,
-                  text: 'Đăng nhập',
-                  onPressed: () async {
-                    // Handle login
-                    // Kiểm tra giá trị của form
-                    if (_formKey.currentState!.validate()) {
-                      // Gọi API đăng nhập
-                      final errorMessage = await _authService.loginUser(
-                          emailController.text, passwordController.text);
+                child: _isLoading
+                    ? CircularProgressIndicator()
+                    : AppButton(
+                        width: ConstraintConfig.getWidth(context) / 2,
+                        text: 'Đăng nhập',
+                        onPressed: () async {
+                          // Handle login
+                          // Kiểm tra giá trị của form
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true;
+                            });
 
-                      if (errorMessage == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              backgroundColor: Colors.green,
-                              duration: Duration(seconds: 2),
-                              content: Text('Đăng nhập thành công!')),
-                        );
-                        Navigator.pop(context);
+                            // Gọi API đăng nhập
+                            final errorMessage = await _authService.loginUser(
+                                emailController.text, passwordController.text);
 
-                        // Xử lý chuyển hướng sau khi đăng nhập thành công
-                        RouteConfig.navigateTo(
-                          context,
-                          const AppNavigation(index: 0),
-                          pushScreenType: PushScreenType.pushAndRemoveUntil,
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              backgroundColor: Colors.red,
-                              duration: const Duration(seconds: 2),
-                              content: Text(errorMessage)),
-                        );
-                      }
-                    }
-                  },
-                ),
+                            setState(() {
+                              _isLoading = false;
+                            });
+
+                            if (errorMessage == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.green,
+                                    duration: Duration(seconds: 2),
+                                    content: Text('Đăng nhập thành công!')),
+                              );
+                              Navigator.pop(context);
+
+                              // Xử lý chuyển hướng sau khi đăng nhập thành công
+                              RouteConfig.navigateTo(
+                                context,
+                                const AppNavigation(index: 0),
+                                pushScreenType:
+                                    PushScreenType.pushAndRemoveUntil,
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    backgroundColor: Colors.red,
+                                    duration: const Duration(seconds: 2),
+                                    content: Text(errorMessage)),
+                              );
+                            }
+                          }
+                        },
+                      ),
               ),
               SizedBox(
                 height: ConstraintConfig.kSpaceBetweenItemsMedium,

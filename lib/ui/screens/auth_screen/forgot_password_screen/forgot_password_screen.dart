@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/route_config.dart';
+import 'package:hufniture/configs/validators.dart';
+import 'package:hufniture/data/services/AuthService/auth_service.dart';
 import 'package:hufniture/ui/screens/auth_screen/forgot_password_screen/confirm_reset_password_screen.dart';
 import 'package:hufniture/ui/widgets/buttons/app_button.dart';
 import 'package:hufniture/ui/widgets/custom_appbar/custom_appbar.dart';
@@ -11,6 +14,9 @@ class ForgotPasswordScreen extends StatelessWidget {
   ForgotPasswordScreen({super.key});
 
   final TextEditingController emailController = TextEditingController();
+  final AuthService _authService = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +50,9 @@ class ForgotPasswordScreen extends StatelessWidget {
               ],
             ),
           ),
-
           SizedBox(
             height: ConstraintConfig.kSpaceBetweenItemsUltraLarge * 3,
           ),
-
           // Email form
           Expanded(
             child: Container(
@@ -63,12 +67,16 @@ class ForgotPasswordScreen extends StatelessWidget {
                       topRight: Radius.circular(32))),
               child: Column(
                 children: [
-                  AppInput(
-                    controller: emailController,
-                    label: 'Nhập Email bạn đã đăng ký',
-                    hintText: 'abc@gmail.com',
-                    inputType: TextInputType.emailAddress,
-                    fillColor: Colors.white,
+                  Form(
+                    key: _formKey,
+                    child: AppInput(
+                      controller: emailController,
+                      label: 'Nhập Email bạn đã đăng ký',
+                      hintText: 'abc@gmail.com',
+                      inputType: TextInputType.emailAddress,
+                      fillColor: Colors.white,
+                      validator: Validators.validateEmail,
+                    ),
                   ),
                   SizedBox(
                     height: ConstraintConfig.kSpaceBetweenItemsUltraLarge,
@@ -78,11 +86,24 @@ class ForgotPasswordScreen extends StatelessWidget {
                     child: AppButton(
                       width: ConstraintConfig.getWidth(context) / 2,
                       text: 'Tiếp Theo',
-                      onPressed: () {
-                        // Handle check if email is signed up
-
-                        RouteConfig.navigateTo(
-                            context, ConfirmResetPasswordScreen());
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          // Handle check if email is signed up
+                          bool emailExists = await _authService
+                              .checkEmailExists(emailController.text.trim());
+                          if (emailExists) {
+                            RouteConfig.navigateTo(
+                                context,
+                                ConfirmResetPasswordScreen(
+                                    email: emailController.text.trim()));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('Email không tồn tại')),
+                            );
+                          }
+                        }
                       },
                     ),
                   ),
