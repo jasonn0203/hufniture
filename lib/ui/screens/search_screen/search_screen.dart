@@ -35,24 +35,9 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<List<FilterProduct>>? filteredProducts;
   List<Category>? categories;
   List<Color>? colors;
-  // Replace with data in API
-  final List<String> _categories = [];
 
   // A list of selected categories
   final Set<Category> _selectedCategories = {};
-
-  // List of selectable colors
-  // final List<Color> _selectableColors = [
-  //   Colors.red,
-  //   Colors.blue,
-  //   Colors.green,
-  //   Colors.yellow,
-  //   Colors.orange,
-  //   Colors.pink,
-  // ];
-
-  // Currently selected color
-  // Color? _selectedColor;
 
   Future<void> _loadFilterData() async {
     try {
@@ -184,7 +169,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
-              //_buildPriceRangeSlider(context, setModalState),
               AppCustomText(
                 content: 'Khoảng Giá',
                 textStyle: Theme.of(context)
@@ -227,11 +211,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
-
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
               _buildCategoryFilter(context, setModalState),
-              // SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
-              // _buildColorFilter(context, setModalState),
               SizedBox(height: ConstraintConfig.kSpaceBetweenItemsMedium),
               AppButton(
                 text: 'Lọc',
@@ -268,44 +249,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildPriceRangeSlider(
-      BuildContext context, StateSetter setModalState) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppCustomText(
-          content: 'Khoảng Giá',
-          textStyle: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: ColorConfig.accentColor),
-        ),
-        Slider(
-          value: _currentStepIndex.toDouble(),
-          min: 0,
-          max: (_priceSteps.length - 1).toDouble(),
-          divisions: _priceSteps.length - 1,
-          label: Helpers.formatPrice(_priceSteps[_currentStepIndex]).toString(),
-          onChanged: (double value) {
-            setModalState(() {
-              _currentStepIndex = value.round();
-            });
-          },
-          activeColor: ColorConfig.primaryColor,
-          inactiveColor: ColorConfig.secondaryColor,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(Helpers.formatPrice(_priceSteps[0]) as String),
-            Text(Helpers.formatPrice(_priceSteps[_priceSteps.length - 1])
-                as String),
-          ],
-        ),
-      ],
     );
   }
 
@@ -355,53 +298,6 @@ class _SearchScreenState extends State<SearchScreen> {
       ],
     );
   }
-
-  // Widget _buildColorFilter(BuildContext context, StateSetter setModalState) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       AppCustomText(
-  //         content: 'Màu Sắc',
-  //         textStyle: Theme.of(context)
-  //             .textTheme
-  //             .titleSmall
-  //             ?.copyWith(color: ColorConfig.accentColor),
-  //       ),
-  //       Wrap(
-  //         spacing: 8.0,
-  //         runSpacing: 8.0,
-  //         children: _selectableColors.map((color) {
-  //           return GestureDetector(
-  //             onTap: () {
-  //               setModalState(() {
-  //                 // Toggle color selection
-  //                 if (_selectedColor == color) {
-  //                   _selectedColor = null;
-  //                 } else {
-  //                   _selectedColor = color;
-  //                 }
-  //               });
-  //             },
-  //             child: Container(
-  //               width: 40,
-  //               height: 40,
-  //               decoration: BoxDecoration(
-  //                 shape: BoxShape.circle,
-  //                 color: color,
-  //                 border: Border.all(
-  //                   color: _selectedColor == color
-  //                       ? ColorConfig.primaryColor
-  //                       : Colors.transparent,
-  //                   width: 4.0,
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         }).toList(),
-  //       ),
-  //     ],
-  //   );
-  // }
 }
 
 class ThousandsSeparatorFormatter extends TextInputFormatter {

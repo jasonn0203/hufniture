@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
@@ -148,14 +149,31 @@ class _ProductDetailState extends State<ProductDetail> {
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
                           child: Center(
-                            child: CachedNetworkImage(
-                              fit: BoxFit.contain,
-                              placeholder: (context, url) =>
-                                  const LoadingIndicator(),
-                              imageUrl: product.imageUrl ?? '',
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
+                            child: Hero(
+                                tag: product.imageUrl!.toString().toLowerCase(),
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.contain,
+                                  placeholder: (context, url) =>
+                                      const LoadingIndicator(),
+                                  imageUrl: product.imageUrl ?? '',
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                )
+                                    .animate()
+                                    .scaleX(
+                                        duration: 450.ms,
+                                        alignment: Alignment.centerLeft,
+                                        curve: Curves.easeInOutCirc)
+                                    .animate(
+                                        onPlay: (controller) =>
+                                            controller.repeat()) // shake +
+                                    // scale up
+                                    .shimmer(
+                                        delay: 2000.ms,
+                                        duration: 1800.ms) // shimmer +
+
+                                    .then(delay: 400.ms) // then wait and,
+                                ),
                           ),
                         ),
                         SizedBox(

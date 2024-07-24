@@ -8,9 +8,16 @@ import 'package:hufniture/ui/screens/product_screen/product_detail/product_detai
 import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   const ProductCard({Key? key, required this.productCard}) : super(key: key);
   final ProductCardModel productCard;
+
+  @override
+  _ProductCardState createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +30,21 @@ class ProductCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetail(
-              productId: productCard.id,
-              productName: productCard.prodName,
+              productId: widget.productCard.id,
+              productName: widget.productCard.prodName,
             ),
           ),
         );
+      },
+      onLongPress: () {
+        setState(() {
+          _isPressed = true;
+        });
+      },
+      onLongPressUp: () {
+        setState(() {
+          _isPressed = false;
+        });
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,14 +56,21 @@ class ProductCard extends StatelessWidget {
             ),
             height: 120,
             width: double.infinity,
-            child: CachedNetworkImage(
-              imageUrl: productCard.prodImgUrl,
-              fit: BoxFit.contain,
-              alignment: Alignment.center,
-              placeholder: (context, url) => const Center(
-                child: LoadingIndicator(),
+            child: AnimatedScale(
+              scale: _isPressed ? 1.2 : 1.0,
+              duration: const Duration(milliseconds: 200),
+              child: Hero(
+                tag: widget.productCard.prodImgUrl.toString().toLowerCase(),
+                child: CachedNetworkImage(
+                  imageUrl: widget.productCard.prodImgUrl,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center,
+                  placeholder: (context, url) => const Center(
+                    child: LoadingIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
               ),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
           Padding(
@@ -55,7 +79,7 @@ class ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  productCard.prodName,
+                  widget.productCard.prodName,
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
@@ -63,7 +87,7 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  productCard.shorDesc,
+                  widget.productCard.shorDesc,
                   overflow: TextOverflow.fade,
                   maxLines: 2,
                   style: Theme.of(context).textTheme.bodySmall,
@@ -71,7 +95,7 @@ class ProductCard extends StatelessWidget {
                 const SizedBox(height: 8.0),
                 AppCustomText(
                   content: Helpers.formatPrice(
-                    productCard.prodPrice,
+                    widget.productCard.prodPrice,
                   ),
                   color: true,
                 ),

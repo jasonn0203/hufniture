@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hufniture/data/models/category.dart';
 import 'package:hufniture/data/services/CategoryService/category_service.dart';
 import 'package:hufniture/ui/screens/category/category_by_room_screen/category_room_by_name_type.dart';
@@ -52,7 +53,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                     );
                   },
-                );
+                ).animate(delay: 250.ms).fade(duration: 400.ms);
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text('Failed to load categories: ${snapshot.error}'),

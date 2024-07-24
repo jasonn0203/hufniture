@@ -70,29 +70,36 @@ class ProductService {
   }) async {
     try {
       // Construct query parameters
-      final Map<String, String?> queryParameters = {};
+      final Map<String, List<String>> queryParameters = {};
       if (minPrice != null) {
-        queryParameters['minPrice'] = minPrice.toString();
+        queryParameters['minPrice'] = [minPrice.toString()];
       }
       if (maxPrice != null) {
-        queryParameters['maxPrice'] = maxPrice.toString();
+        queryParameters['maxPrice'] = [maxPrice.toString()];
       }
       if (categoryIds != null && categoryIds.isNotEmpty) {
-        queryParameters['categoryIds'] = categoryIds.join(',');
+        queryParameters['categoryIds'] = categoryIds;
       }
       if (colorIds != null && colorIds.isNotEmpty) {
-        queryParameters['colorIds'] = colorIds.join(',');
+        queryParameters['colorIds'] = colorIds;
       }
 
-      // Construct the URI with query parameters
+      // Manually build query string to ensure multiple 'categoryIds' are included correctly
       final Uri uri = Uri.parse(
               'https://localhost:7245/api/FurnitureProduct/GetFilteredProducts')
           .replace(
-        queryParameters: queryParameters,
-      );
+              queryParameters: queryParameters
+                  .map((key, values) => MapEntry(key, values.join(','))));
+
+      final queryString = uri.queryParameters.entries
+          .expand((entry) => entry.value.split(',').map((value) =>
+              '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(value)}'))
+          .join('&');
+
+      final fullUri = uri.replace(query: queryString);
 
       // Make the HTTP GET request
-      final response = await http.get(uri);
+      final response = await http.get(fullUri);
 
       // Check if the request was successful
       if (response.statusCode == 200) {

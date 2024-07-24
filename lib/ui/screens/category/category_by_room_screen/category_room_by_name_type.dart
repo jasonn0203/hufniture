@@ -1,5 +1,6 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
@@ -128,9 +129,14 @@ class _CategoryRoomByNameTypeScreenState
     return categoryDetails.furnitureTypes?.map((type) {
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _isGridView
-                ? _buildProductGridView(type.products, context)
-                : _buildProductListView(type.products, context),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              // Thêm key duy nhất để đảm bảo hoạt ảnh
+              key: ValueKey<bool>(_isGridView),
+              child: _isGridView
+                  ? _buildProductGridView(type.products, context)
+                  : _buildProductListView(type.products, context),
+            ),
           );
         }).toList() ??
         [];
@@ -138,6 +144,7 @@ class _CategoryRoomByNameTypeScreenState
 
   Widget _buildProductGridView(List<Products>? products, BuildContext context) {
     return GridView.builder(
+      key: ValueKey<bool>(_isGridView), // Thêm key duy nhất
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: ConstraintConfig.responsive(context, 6, 4, 2),
         crossAxisSpacing: 8,
@@ -157,11 +164,12 @@ class _CategoryRoomByNameTypeScreenState
           ),
         );
       },
-    );
+    ).animate(delay: 300.ms).fade(duration: 400.ms);
   }
 
   Widget _buildProductListView(List<Products>? products, BuildContext context) {
     return ListView.builder(
+      key: ValueKey<bool>(_isGridView), // Thêm key duy nhất
       itemCount: products?.length ?? 0,
       itemBuilder: (context, index) {
         var product = products![index];
@@ -175,7 +183,7 @@ class _CategoryRoomByNameTypeScreenState
           ),
         );
       },
-    );
+    ).animate(delay: 300.ms).fade(duration: 400.ms);
   }
 
   Widget _buildToggleButton({

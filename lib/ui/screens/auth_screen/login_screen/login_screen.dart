@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppbar(
-        title: 'Login',
+        title: 'Đăng Nhập',
       ),
       body: Padding(
         padding: ConstraintConfig.kHorizontalPadding,

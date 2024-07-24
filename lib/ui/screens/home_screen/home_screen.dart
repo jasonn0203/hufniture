@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hufniture/configs/color_config.dart';
 import 'package:hufniture/configs/constraint_config.dart';
 import 'package:hufniture/configs/helpers.dart';
@@ -21,9 +22,14 @@ import 'package:hufniture/ui/widgets/loading_indicator/loading_indicator.dart';
 import 'package:hufniture/ui/widgets/product_card/product_card.dart';
 import 'package:hufniture/ui/widgets/text/app_custom_text.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final bannerService = BannerService();
@@ -57,7 +63,14 @@ class HomeScreen extends StatelessWidget {
                       content: 'Danh Mục',
                       color: true,
                       isTitle: true,
-                    ),
+                    )
+                        .animate(
+                            onComplete: (controller) => controller.repeat())
+                        .shimmer(
+                            delay: 200.ms,
+                            duration: 1200.ms,
+                            color: ColorConfig.secondaryColor,
+                            angle: 60),
                     _buildCategoryList(),
                   ],
                 ),
@@ -74,7 +87,10 @@ class HomeScreen extends StatelessWidget {
                       content: 'Bán chạy nhất',
                       color: true,
                       isTitle: true,
-                    ),
+                    )
+                        .animate(
+                            onComplete: (controller) => controller.repeat())
+                        .shimmer(delay: 200.ms, duration: 1200.ms),
                     SizedBox(
                       height: ConstraintConfig.kSpaceBetweenItemsUltraLarge,
                     ),
@@ -104,7 +120,9 @@ class HomeScreen extends StatelessWidget {
             content: 'Khám phá ngay !',
             color: true,
             isTitle: true,
-          ),
+          )
+              .animate(onComplete: (controller) => controller.repeat())
+              .shimmer(delay: 200.ms, duration: 1200.ms, angle: 60),
           SizedBox(
             height: ConstraintConfig.kSpaceBetweenItemsMedium,
           ),
@@ -142,7 +160,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       );
                     },
-                  );
+                  ).animate(delay: 500.ms).fade(duration: 500.ms);
                 }
               },
             ),
@@ -250,7 +268,13 @@ class HomeScreen extends StatelessWidget {
                     imageUrl: product.imageUrl ?? '',
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
-                  ),
+                  )
+                      .animate(onPlay: (controller) => controller.repeat())
+                      .shimmer(delay: 2000.ms, duration: 1800.ms) // shimmer +
+                      .shake(hz: 2, curve: Curves.easeInOutCirc) // shake +
+                      // scale up
+                      .then(delay: 400.ms) // then wait and
+                  ,
                 ),
               ],
             ),
@@ -282,7 +306,7 @@ class HomeScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return CategoryHome(category: categories[index]);
                 },
-              );
+              ).animate(delay: 400.ms).fade(duration: 500.ms);
             }
           },
         ),
